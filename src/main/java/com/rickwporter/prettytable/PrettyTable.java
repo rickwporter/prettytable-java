@@ -14,14 +14,14 @@ public final class PrettyTable {
     private static final String HTML_ROW_TAG = "tr";
     private static final String HTML_CELL_BODY_TAG = "td";
     private static final String HTML_CELL_HEADER_TAG = "th";
- 
+
     public enum CellFormat {
         CENTER,
         LEFT,
-        RIGHT, 
+        RIGHT,
     }
 
-    public enum OutputFormat { 
+    public enum OutputFormat {
         TEXT,
         CSV,
         HTML,
@@ -33,8 +33,8 @@ public final class PrettyTable {
     private List<CellFormat> formats = new ArrayList<>();
     private CellFormat defaultFormat = CellFormat.CENTER;
 
-    public PrettyTable(String... headers) {
-        this.headers.addAll(Arrays.asList(headers));
+    public PrettyTable(String... hdrs) {
+        this.headers.addAll(Arrays.asList(hdrs));
     }
 
      public void addRow(Object... row) {
@@ -67,9 +67,9 @@ public final class PrettyTable {
         this.formats.set(column, fmt);
     }
 
-    public void setFormats(CellFormat... formats) {
+    public void setFormats(CellFormat... fmts) {
         this.formats.clear();
-        this.formats.addAll(Arrays.asList(formats));
+        this.formats.addAll(Arrays.asList(fmts));
     }
 
     private CellFormat getFormat(int column) {
@@ -80,7 +80,7 @@ public final class PrettyTable {
     }
 
     public void removeRedundant() {
-        // Remove duplicate data from rows for more aesthetically pleasing output for text 
+        // Remove duplicate data from rows for more aesthetically pleasing output for text
         if (this.rows.size() < 2) {
             return;
         }
@@ -182,9 +182,9 @@ public final class PrettyTable {
     }
 
     String csvRow(List<? extends Object> row) {
-        return StringUtils.join( 
+        return StringUtils.join(
             row.stream().map(c -> csvEncode(c.toString())).collect(Collectors.toList()), ","
-        ) + "\n"; 
+        ) + "\n";
     }
 
     String toCsv() {
@@ -200,7 +200,9 @@ public final class PrettyTable {
         // TODO: HTML formatting
         String result = String.format("%s<%s>\n", initIndent, HTML_ROW_TAG);
         for (Object col : row) {
-            result += String.format( "%s%s<%s>%s</%s>\n", initIndent, indent, cellTag, col.toString(), cellTag );
+            result += String.format(
+                "%s%s<%s>%s</%s>\n", initIndent, indent, cellTag, col.toString(), cellTag
+            );
         }
         result += String.format("%s</%s>\n", initIndent, HTML_ROW_TAG);
         return result;
@@ -228,7 +230,7 @@ public final class PrettyTable {
         }
         try {
             Integer value = Integer.parseInt(object.toString());
-            return value.toString(); 
+            return value.toString();
         } catch (NumberFormatException ex) {
             // nothing to do here, just double-quote as below
         }
@@ -238,7 +240,7 @@ public final class PrettyTable {
     String jsonRow(List<Object> row, String initIndent, String indent) {
         List<String> rowValues = new ArrayList<>();
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
-            rowValues.add( 
+            rowValues.add(
                 String.format("%s%s\"%s\": %s", initIndent, indent, this.headers.get(cIdx), jsonEncode(row.get(cIdx)))
             );
         }
@@ -277,6 +279,6 @@ public final class PrettyTable {
         case HTML:
             return this.toHtml();
         }
-        return String.format("Unhandled format=%s", format); 
+        return String.format("Unhandled format=%s", format);
     }
 }
