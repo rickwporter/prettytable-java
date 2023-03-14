@@ -102,6 +102,7 @@
             <dependency>org.apache.commons:commons-lang3</dependency>
             <dependency>org.junit.jupiter:junit-jupiter-api</dependency>
           </usedDependencies>
+          <silent>true</silent>
         </configuration>
       </plugin>
     </plugins>
