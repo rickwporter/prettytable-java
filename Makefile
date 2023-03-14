@@ -1,5 +1,8 @@
 .PHONY = build
+.PHONY += clean
+.PHONY += coverage
 .PHONY += lint
+.PHONY += test
 
 MVN_ARGS ?= -ntp
 MVN_CMD ?= mvn
