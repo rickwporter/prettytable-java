@@ -1,6 +1,8 @@
 .PHONY = build
 .PHONY += clean
 .PHONY += coverage
+.PHONY += depend-check
+.PHONY += depend-tree
 .PHONY += lint
 .PHONY += test
 
@@ -20,6 +22,12 @@ coverage: test ## Generate code coverage reports
 
 clean: ## Cleans up build artifacts
 	$(MVN_CMD) $(MVN_ARGS) clean
+
+depend-check:  ## Checks to make sure all dependencies are used (or declared unused)
+	$(MVN_CMD) $(MVN_ARGS) dependency:analyze-only
+
+depend-tree: ## Generates dependency reports
+	$(MVN_CMD) $(MVN_ARGS) dependency:tree
 
 lint: ## Check formatting
 	$(MVN_CMD) $(MVN_ARGS) checkstyle:check

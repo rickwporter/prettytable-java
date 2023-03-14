@@ -36,7 +36,7 @@
     <!-- Unit test stuff -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
+      <artifactId>junit-jupiter-api</artifactId>
       <version>${version.jupiter.junit}</version>
       <scope>test</scope>
     </dependency>
@@ -44,6 +44,7 @@
 
   <build>
     <plugins>
+      <!-- Checkstyle plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -62,6 +63,7 @@
           <linkXRef>false</linkXRef>
         </configuration>
       </plugin>
+      <!-- Code coverage plugin -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -80,6 +82,26 @@
                 </goals>
             </execution>
         </executions>
+      </plugin>
+      <!-- Dependency plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>analyze</id>
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <failOnWarning>true</failOnWarning>
+          <scriptableOutput>true</scriptableOutput>
+          <usedDependencies>
+            <dependency>org.apache.commons:commons-lang3</dependency>
+          </usedDependencies>
+        </configuration>
       </plugin>
     </plugins>
   </build>
