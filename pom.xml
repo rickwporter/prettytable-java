@@ -18,6 +18,10 @@
 
     <!-- JUnit versions -->
     <version.jupiter.junit>5.7.0</version.jupiter.junit>
+
+    <!-- Checkstyle -->
+    <version.plugin.checkstyle>3.2.1</version.plugin.checkstyle>
+    <version.checkstyle>8.30</version.checkstyle>
   </properties>
 
   <dependencies>
@@ -36,4 +40,28 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${version.plugin.checkstyle}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${version.checkstyle}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <configLocation>checkstyle.xml</configLocation>
+          <consoleOutput>true</consoleOutput>
+          <failsOnError>true</failsOnError>
+          <linkXRef>false</linkXRef>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
