@@ -253,7 +253,11 @@ public final class PrettyTable {
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
             if (!this.headers.isEmpty()) {
                 rowValues.add(
-                    String.format("%s%s\"%s\": %s", initIndent, indent, this.headers.get(cIdx), jsonEncode(row.get(cIdx)))
+                    String.format("%s%s\"%s\": %s",
+                        initIndent,
+                        indent,
+                        this.headers.get(cIdx),
+                        jsonEncode(row.get(cIdx)))
                 );
             } else {
                 rowValues.add(
