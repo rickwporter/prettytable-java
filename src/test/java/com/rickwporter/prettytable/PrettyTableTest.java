@@ -96,20 +96,25 @@ public class PrettyTableTest {
 
     @Test
     public void testFormattedText() {
+        // this checks all the formatted outputs
+        Map<OutputFormat, String> formats = new HashMap<OutputFormat, String>() {{
+            put(OutputFormat.HTML, "html");
+            put(OutputFormat.TEXT, "text");
+        }};
         PrettyTable table = createFormattedTable();
-        String result = table.toText(true);
-        String expected = loadFileContent("PrettyTable_formatted.text");
-        Assertions.assertEquals(expected, result);
-        // same answer when going through 'formattedString()'
-        result = table.formattedString(OutputFormat.TEXT);
-        Assertions.assertEquals(expected, result);
-        // update the table setting all the formats at once
+        for (Map.Entry<OutputFormat, String> entry: formats.entrySet()) {
+            String expected = loadFileContent("PrettyTable_formatted." + entry.getValue());
+            String result = table.formattedString(entry.getKey());
+            Assertions.assertEquals(expected, result);
+        }
+
+        // update the table setting all the formats at once, and get same answers
         table.setFormats(CellFormat.LEFT, CellFormat.CENTER, CellFormat.RIGHT);
-        result = table.formattedString(OutputFormat.TEXT);
-        Assertions.assertEquals(expected, result);
-        // same answer in this case because there are no duplicates
-        result = table.toText(false);
-        Assertions.assertEquals(expected, result);
+        for (Map.Entry<OutputFormat, String> entry: formats.entrySet()) {
+            String expected = loadFileContent("PrettyTable_formatted." + entry.getValue());
+            String result = table.formattedString(entry.getKey());
+            Assertions.assertEquals(expected, result);
+        }
     }
 
     @Test
@@ -117,7 +122,6 @@ public class PrettyTableTest {
         // this checks all the "unformatted" outputs... using the same data as the basic test for easier comparison
         Map<OutputFormat, String> formats = new HashMap<OutputFormat, String>() {{
             put(OutputFormat.CSV, "csv");
-            put(OutputFormat.HTML, "html");
             put(OutputFormat.JSON, "json");
         }};
         PrettyTable table = createFormattedTable();

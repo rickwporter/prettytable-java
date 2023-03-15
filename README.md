@@ -98,7 +98,7 @@ Using the **json** format (e.g. `OutputFormat.JSON`), you get the following outp
 ```
 
 ### Alignment
-The ASCII **text** output can have different alignments. Currently, **text** is the only output format that can support the alignments. Here's how you would update the above table:
+Both ASCII **text** and **html** formats support different alignments. Here's how you would update the above table:
 ```Java
 import com.rickwporter.prettytable.PrettyTable.CellFormat;
 
@@ -114,6 +114,15 @@ Now, when the **text** output is generated, the output will look like this:
 | 1          |   1024   |      65535 |
 | Washington |  Adams   |  Jefferson |
 +------------+----------+------------+
+```
+
+The **html** output will have the appropriate `style="text-align:xxx"` attribute on each `<th>` and `<td>` tag. So, second row in the table above would look like:
+```
+    <tr>
+        <td style="text-align:left">1</td>
+        <td style="text-align:center">1024</td>
+        <td style="text-align:right">65535</td>
+    </tr>
 ```
 
  ### Deduplication

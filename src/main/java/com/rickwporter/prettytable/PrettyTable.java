@@ -16,9 +16,17 @@ public final class PrettyTable {
     private static final String HTML_CELL_HEADER_TAG = "th";
 
     public enum CellFormat {
-        CENTER,
-        LEFT,
-        RIGHT,
+        CENTER("text-align:center"),
+        LEFT("text-align:left"),
+        RIGHT("text-align:right");
+
+        private final String htmlStyle;
+        CellFormat(String html) {
+            this.htmlStyle = html;
+        }
+        public String getHtmlStyle() {
+            return this.htmlStyle;
+        }
     }
 
     public enum OutputFormat {
@@ -191,12 +199,20 @@ public final class PrettyTable {
         return result.toString();
     }
 
+    String htmlColumnFormat(Integer column) {
+        if (this.formats.isEmpty()) {
+            return "";
+        }
+        return " style=\"" + this.getFormat(column).getHtmlStyle() + "\"";
+    }
+
     String htmlRow(List<? extends Object> row, String initIndent, String indent, String cellTag) {
-        // TODO: HTML formatting
         String result = String.format("%s<%s>\n", initIndent, HTML_ROW_TAG);
-        for (Object col : row) {
+        for (int column = 0; column < row.size(); column++) {
+            Object obj = row.get(column);
+            String cellFormat = htmlColumnFormat(column);
             result += String.format(
-                "%s%s<%s>%s</%s>\n", initIndent, indent, cellTag, col.toString(), cellTag
+                "%s%s<%s%s>%s</%s>\n", initIndent, indent, cellTag, cellFormat, obj.toString(), cellTag
             );
         }
         result += String.format("%s</%s>\n", initIndent, HTML_ROW_TAG);
