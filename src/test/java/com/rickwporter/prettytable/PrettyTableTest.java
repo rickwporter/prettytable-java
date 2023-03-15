@@ -54,7 +54,7 @@ public class PrettyTableTest {
         String expected = loadFileContent("PrettyTable_basic.csv");
         Assertions.assertEquals(expected, result);
         // same answer when going through 'formattedString()'
-        result = table.formattedString(PrettyTable.OutputFormat.CSV);
+        result = table.formattedString(OutputFormat.CSV);
         Assertions.assertEquals(expected, result);
     }
 
@@ -65,7 +65,7 @@ public class PrettyTableTest {
         String expected = loadFileContent("PrettyTable_basic.html");
         Assertions.assertEquals(expected, result);
         // same answer when going through 'formattedString()'
-        result = table.formattedString(PrettyTable.OutputFormat.HTML);
+        result = table.formattedString(OutputFormat.HTML);
         Assertions.assertEquals(expected, result);
     }
 
@@ -76,7 +76,7 @@ public class PrettyTableTest {
         String expected = loadFileContent("PrettyTable_basic.json");
         Assertions.assertEquals(expected, result);
         // same answer when going through 'formattedString()'
-        result = table.formattedString(PrettyTable.OutputFormat.JSON);
+        result = table.formattedString(OutputFormat.JSON);
         Assertions.assertEquals(expected, result);
     }
 
@@ -87,7 +87,7 @@ public class PrettyTableTest {
         String expected = loadFileContent("PrettyTable_basic.text");
         Assertions.assertEquals(expected, result);
         // same answer when going through 'formattedString()'
-        result = table.formattedString(PrettyTable.OutputFormat.TEXT);
+        result = table.formattedString(OutputFormat.TEXT);
         Assertions.assertEquals(expected, result);
         // same answer in this case because there are no duplicates
         result = table.toText(false);
@@ -101,11 +101,11 @@ public class PrettyTableTest {
         String expected = loadFileContent("PrettyTable_formatted.text");
         Assertions.assertEquals(expected, result);
         // same answer when going through 'formattedString()'
-        result = table.formattedString(PrettyTable.OutputFormat.TEXT);
+        result = table.formattedString(OutputFormat.TEXT);
         Assertions.assertEquals(expected, result);
         // update the table setting all the formats at once
         table.setFormats(CellFormat.LEFT, CellFormat.CENTER, CellFormat.RIGHT);
-        result = table.formattedString(PrettyTable.OutputFormat.TEXT);
+        result = table.formattedString(OutputFormat.TEXT);
         Assertions.assertEquals(expected, result);
         // same answer in this case because there are no duplicates
         result = table.toText(false);
