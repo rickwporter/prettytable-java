@@ -100,6 +100,10 @@ public class PrettyTableTest {
         // same answer when going through 'formattedString()'
         result = table.formattedString(PrettyTable.OutputFormat.TEXT);
         Assertions.assertEquals(expected, result);
+        // update the table setting all the formats at once
+        table.setFormats(CellFormat.LEFT, CellFormat.CENTER, CellFormat.RIGHT);
+        result = table.formattedString(PrettyTable.OutputFormat.TEXT);
+        Assertions.assertEquals(expected, result);
     }
 
     @Test
