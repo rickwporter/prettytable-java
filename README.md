@@ -118,9 +118,7 @@ Now, when the **text** output is generated, the output will look like this:
 
  ### Deduplication
  The ASCII **text** output has de-duplication for more aesthetically pleasing output. Currently, **text*** is the only format where this de-duplication is supported, and there is no option to turn it off.
- 
- Additionally, printing the output format in **text** mode destructively alters the data. This should be fixed soon.
- 
+  
 ## Development
 
 Your input is welcomed.

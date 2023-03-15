@@ -79,32 +79,6 @@ public final class PrettyTable {
         return this.formats.get(column);
     }
 
-    public void removeRedundant() {
-        // Remove duplicate data from rows for more aesthetically pleasing output for text
-        if (this.rows.size() < 2) {
-            return;
-        }
-        List<Object> lastRow = new ArrayList<Object>(this.rows.get(0));
-        int lastChanged = 0;
-        for (int rIdx = 1; rIdx < this.rows.size(); rIdx++) {
-            List<Object> row = this.rows.get(rIdx);
-            List<Object> rowCopy = new ArrayList<Object>(row);
-            int changed = 0;
-            for (int cIdx = 0; cIdx < row.size(); cIdx++) {
-                if (!row.get(cIdx).equals(lastRow.get(cIdx))) {
-                    break;
-                }
-                row.set(cIdx, "");
-                // blank out current cell
-                changed += 1;
-            }
-            if (changed == 0 || changed <= lastChanged) {
-                lastRow = rowCopy;
-            }
-            lastChanged = changed;
-        }
-    }
-
     private int getMaxSizeForColumn(int column) {
         int maxSize = column >= this.headers.size() ? 0 : this.headers.get(column).length();
         for (List<Object> row : this.rows) {
@@ -165,7 +139,7 @@ public final class PrettyTable {
         return result.toString();
     }
 
-    String toText() {
+    String toText(boolean removeRedundant) {
         List<Integer> maxSizes = getMaxSizes();
         StringBuilder result = new StringBuilder();
         if (!this.headers.isEmpty()) {
@@ -173,8 +147,20 @@ public final class PrettyTable {
             result.append(textRow(this.headers, maxSizes));
         }
         result.append(textRule(maxSizes));
+        List<String> lastRow = new ArrayList<>();
         for (List<Object> row : this.rows) {
-            result.append(textRow(row, maxSizes));
+            List<String> currentRow = row.stream().map(c -> c.toString()).collect(Collectors.toList());
+            List<String> fullRow = new ArrayList<String>(currentRow);  // make a copy before manipulating
+            if (removeRedundant) {
+                for (int i = 0; i < lastRow.size(); i++) {
+                    if (lastRow.get(i) != currentRow.get(i)) {
+                        break;
+                    }
+                    currentRow.set(i, "");
+                }
+                lastRow = fullRow;
+            }
+            result.append(textRow(currentRow, maxSizes));
         }
         result.append(textRule(maxSizes));
         return result.toString();
@@ -297,8 +283,7 @@ public final class PrettyTable {
     public String formattedString(OutputFormat format) {
         switch (format) {
         case TEXT:
-            this.removeRedundant();
-            return this.toText();
+            return this.toText(true);
         case CSV:
             return this.toCsv();
         case JSON:

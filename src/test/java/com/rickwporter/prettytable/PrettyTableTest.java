@@ -83,18 +83,21 @@ public class PrettyTableTest {
     @Test
     public void testBasicText() {
         PrettyTable table = createBasicTable();
-        String result = table.toText();
+        String result = table.toText(true);
         String expected = loadFileContent("PrettyTable_basic.text");
         Assertions.assertEquals(expected, result);
         // same answer when going through 'formattedString()'
         result = table.formattedString(PrettyTable.OutputFormat.TEXT);
+        Assertions.assertEquals(expected, result);
+        // same answer in this case because there are no duplicates
+        result = table.toText(false);
         Assertions.assertEquals(expected, result);
     }
 
     @Test
     public void testFormattedText() {
         PrettyTable table = createFormattedTable();
-        String result = table.toText();
+        String result = table.toText(true);
         String expected = loadFileContent("PrettyTable_formatted.text");
         Assertions.assertEquals(expected, result);
         // same answer when going through 'formattedString()'
@@ -103,6 +106,9 @@ public class PrettyTableTest {
         // update the table setting all the formats at once
         table.setFormats(CellFormat.LEFT, CellFormat.CENTER, CellFormat.RIGHT);
         result = table.formattedString(PrettyTable.OutputFormat.TEXT);
+        Assertions.assertEquals(expected, result);
+        // same answer in this case because there are no duplicates
+        result = table.toText(false);
         Assertions.assertEquals(expected, result);
     }
 
@@ -114,8 +120,8 @@ public class PrettyTableTest {
             put(OutputFormat.HTML, "html");
             put(OutputFormat.JSON, "json");
         }};
+        PrettyTable table = createFormattedTable();
         for (Map.Entry<OutputFormat, String> entry: formats.entrySet()) {
-            PrettyTable table = createFormattedTable();
             String expected = loadFileContent("PrettyTable_basic." + entry.getValue());
             String result = table.formattedString(entry.getKey());
             Assertions.assertEquals(expected, result);
@@ -125,29 +131,32 @@ public class PrettyTableTest {
 
      @Test
      public void testEmpty() {
+        PrettyTable table = new PrettyTable("Col1", "Col2", "Col3", "Col4");
         for (Map.Entry<OutputFormat, String> entry: OUTPUT_FORMAT_EXTENSIONS.entrySet()) {
-            PrettyTable table = new PrettyTable("Col1", "Col2", "Col3", "Col4");
             String expected = loadFileContent("PrettyTable_empty." + entry.getValue());
             String result = table.formattedString(entry.getKey());
-         Assertions.assertEquals(expected, result);
+            Assertions.assertEquals(expected, result);
         }
      }
 
      @Test
      public void testDuplicated() {
-         for (Map.Entry<OutputFormat, String> entry: OUTPUT_FORMAT_EXTENSIONS.entrySet()) {
-             // create the table each time, since the print may be destructive
-             PrettyTable table = new PrettyTable("Col1", "Col2", "Col3", "Col4");
-             table.addRow("A", "B", "C", "D");
-             table.addRow("A", "B", "C", "Z");
-             table.addRow("A", "B", "F", "E");
-             table.addRow("A", "B", "F", "E"); // causes an empty row -- would be unusal
-
+        PrettyTable table = new PrettyTable("Col1", "Col2", "Col3", "Col4");
+        table.addRow("A", "B", "C", "D");
+        table.addRow("A", "B", "C", "Z");
+        table.addRow("A", "B", "F", "E");
+        table.addRow("A", "B", "F", "E"); // causes an empty row -- would be unusal
+    
+        for (Map.Entry<OutputFormat, String> entry: OUTPUT_FORMAT_EXTENSIONS.entrySet()) {
             String expected = loadFileContent("PrettyTable_duplicate." + entry.getValue());
             String result = table.formattedString(entry.getKey());
             Assertions.assertEquals(expected, result);
-         }
-     }
+        }
+
+        String expected = loadFileContent("PrettyTable_duplicate_undup.text");
+        String result  = table.toText(false);
+        Assertions.assertEquals(expected, result);
+    }
 
      @Test
      public void testQuotedCsv() {
