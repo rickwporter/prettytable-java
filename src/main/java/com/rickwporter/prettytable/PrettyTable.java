@@ -106,7 +106,7 @@ public final class PrettyTable {
     }
 
     private int getMaxSizeForColumn(int column) {
-        int maxSize = this.headers.get(column).length();
+        int maxSize = column >= this.headers.size() ? 0 : this.headers.get(column).length();
         for (List<Object> row : this.rows) {
             int rowSize = row.get(column).toString().length();
             if (rowSize > maxSize) {
@@ -116,9 +116,14 @@ public final class PrettyTable {
         return maxSize;
     }
 
+    private int getMaxColumns() {
+        // get the  # of columns from the first row when there are no headers
+        return this.headers.isEmpty() ? this.rows.get(0).size() : this.headers.size();
+    }
+
     private List<Integer> getMaxSizes() {
         List<Integer> maxSizes = new ArrayList<>();
-        for (int cIdx = 0; cIdx < this.headers.size(); cIdx++) {
+        for (int cIdx = 0; cIdx < this.getMaxColumns(); cIdx++) {
             maxSizes.add(getMaxSizeForColumn(cIdx));
         }
         return maxSizes;
@@ -150,7 +155,7 @@ public final class PrettyTable {
     private String textRule(List<Integer> maxSizes) {
         StringBuilder result = new StringBuilder();
         result.append("+");
-        for (int i = 0; i < this.headers.size(); i++) {
+        for (int i = 0; i < this.getMaxColumns(); i++) {
             for (int j = 0; j < maxSizes.get(i) + 2; j++) {
                 result.append("-");
             }
@@ -163,8 +168,10 @@ public final class PrettyTable {
     String toText() {
         List<Integer> maxSizes = getMaxSizes();
         StringBuilder result = new StringBuilder();
-        result.append(textRule(maxSizes));
-        result.append(textRow(this.headers, maxSizes));
+        if (!this.headers.isEmpty()) {
+            result.append(textRule(maxSizes));
+            result.append(textRow(this.headers, maxSizes));
+        }
         result.append(textRule(maxSizes));
         for (List<Object> row : this.rows) {
             result.append(textRow(row, maxSizes));
@@ -189,7 +196,9 @@ public final class PrettyTable {
 
     String toCsv() {
         StringBuilder result = new StringBuilder();
-        result.append(csvRow(this.headers));
+        if (!this.headers.isEmpty()) {
+            result.append(csvRow(this.headers));
+        }
         for (List<Object> row: this.rows) {
             result.append(csvRow(row));
         }
@@ -212,9 +221,11 @@ public final class PrettyTable {
         StringBuilder result = new StringBuilder();
         String indent = "    ";
         result.append(String.format("<%s>\n", HTML_TABLE_TAG));
-        result.append(String.format("%s<%s>\n", indent, HTML_HEADER_TAG));
-        result.append(htmlRow(this.headers, indent + indent, indent, HTML_CELL_HEADER_TAG));
-        result.append(String.format("%s</%s>\n", indent, HTML_HEADER_TAG));
+        if (!this.headers.isEmpty()) {
+            result.append(String.format("%s<%s>\n", indent, HTML_HEADER_TAG));
+            result.append(htmlRow(this.headers, indent + indent, indent, HTML_CELL_HEADER_TAG));
+            result.append(String.format("%s</%s>\n", indent, HTML_HEADER_TAG));
+        }
         result.append(String.format("%s<%s>\n", indent, HTML_BODY_TAG));
         for (List<Object> row : this.rows) {
             result.append(htmlRow(row, indent + indent, indent, HTML_CELL_BODY_TAG));
@@ -240,9 +251,15 @@ public final class PrettyTable {
     String jsonRow(List<Object> row, String initIndent, String indent) {
         List<String> rowValues = new ArrayList<>();
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
-            rowValues.add(
-                String.format("%s%s\"%s\": %s", initIndent, indent, this.headers.get(cIdx), jsonEncode(row.get(cIdx)))
-            );
+            if (!this.headers.isEmpty()) {
+                rowValues.add(
+                    String.format("%s%s\"%s\": %s", initIndent, indent, this.headers.get(cIdx), jsonEncode(row.get(cIdx)))
+                );
+            } else {
+                rowValues.add(
+                    String.format("%s%s%s", initIndent, indent, jsonEncode(row.get(cIdx)))
+                );
+            }
         }
         return StringUtils.join(rowValues, ",\n");
     }
@@ -251,17 +268,23 @@ public final class PrettyTable {
         StringBuilder result = new StringBuilder();
         String indent = "    ";
         result.append("[\n");
-        result.append(String.format("%s[\n", indent));
-        List<String> headerValues = this.headers.stream()
-            .map(h -> String.format("%s%s\"%s\"", indent, indent, h))
-            .collect(Collectors.toList());
-        result.append(StringUtils.join(headerValues, ",\n") + "\n");
-        result.append(String.format("%s]", indent));
-        String entryPrefix = ",\n";
+        String entryPrefix = "";
+        if (!this.headers.isEmpty()) {
+          result.append(String.format("%s[\n", indent));
+            List<String> headerValues = this.headers.stream()
+                .map(h -> String.format("%s%s\"%s\"", indent, indent, h))
+                .collect(Collectors.toList());
+            result.append(StringUtils.join(headerValues, ",\n") + "\n");
+            result.append(String.format("%s]", indent));
+            entryPrefix = ",\n";
+        }
+        String entryStart = this.headers.isEmpty() ? "[" : "{";
+        String entryEnd = this.headers.isEmpty() ? "]" : "}";
         for (List<Object> row : this.rows) {
-            result.append(String.format("%s%s{\n", entryPrefix, indent));
+            result.append(String.format("%s%s%s\n", entryPrefix, indent, entryStart));
             result.append(jsonRow(row, indent, indent) + "\n");
-            result.append(String.format("%s}", indent));
+            result.append(String.format("%s%s", indent, entryEnd));
+            entryPrefix = ",\n";
         }
         result.append("\n]\n");
         return result.toString();

@@ -200,4 +200,19 @@ public class PrettyTableTest {
         String result = table.formattedString(OutputFormat.JSON);
         Assertions.assertEquals(expected, result);
      }
+
+     @Test
+     public void testNoHeaders() {
+        PrettyTable table = new PrettyTable();
+        table.addRow("A", "B", "c");
+        table.addRow(1, 1024, 65535);
+        table.addRow("Washington", "Adams", "Jefferson");
+
+        for (Map.Entry<OutputFormat, String> entry: OUTPUT_FORMAT_EXTENSIONS.entrySet()) {
+           String expected = loadFileContent("PrettyTable_no_headers." + entry.getValue());
+           String result = table.formattedString(entry.getKey());
+           Assertions.assertEquals(expected, result);
+        }
+
+     }
 }
