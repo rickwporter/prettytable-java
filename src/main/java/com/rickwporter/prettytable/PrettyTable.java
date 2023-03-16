@@ -219,7 +219,7 @@ public final class PrettyTable {
         return result;
     }
 
-    String toHtml() {
+    String toHtml(boolean removeRedundant) {
         StringBuilder result = new StringBuilder();
         String indent = "    ";
         result.append(String.format("<%s>\n", HTML_TABLE_TAG));
@@ -229,8 +229,20 @@ public final class PrettyTable {
             result.append(String.format("%s</%s>\n", indent, HTML_HEADER_TAG));
         }
         result.append(String.format("%s<%s>\n", indent, HTML_BODY_TAG));
+        List<String> lastRow = new ArrayList<>();
         for (List<Object> row : this.rows) {
-            result.append(htmlRow(row, indent + indent, indent, HTML_CELL_BODY_TAG));
+            List<String> currentRow = row.stream().map(c -> c.toString()).collect(Collectors.toList());
+            List<String> fullRow = new ArrayList<String>(currentRow);  // make a copy before manipulating
+            if (removeRedundant) {
+                for (int i = 0; i < lastRow.size(); i++) {
+                    if (lastRow.get(i) != currentRow.get(i)) {
+                        break;
+                    }
+                    currentRow.set(i, "");
+                }
+                lastRow = fullRow;
+            }
+            result.append(htmlRow(currentRow, indent + indent, indent, HTML_CELL_BODY_TAG));
         }
         result.append(String.format("%s</%s>\n", indent, HTML_BODY_TAG));
         result.append(String.format("</%s>\n", HTML_TABLE_TAG));
@@ -297,15 +309,19 @@ public final class PrettyTable {
     }
 
     public String formattedString(OutputFormat format) {
+        return this.formattedString(format, true);
+    }
+
+    public String formattedString(OutputFormat format, boolean removeRedundant) {
         switch (format) {
         case TEXT:
-            return this.toText(true);
+            return this.toText(removeRedundant);
         case CSV:
             return this.toCsv();
         case JSON:
             return this.toJson();
         case HTML:
-            return this.toHtml();
+            return this.toHtml(removeRedundant);
         }
         return String.format("Unhandled format=%s", format);
     }

@@ -126,8 +126,46 @@ The **html** output will have the appropriate `style="text-align:xxx"` attribute
 ```
 
  ### Deduplication
- The ASCII **text** output has de-duplication for more aesthetically pleasing output. Currently, **text*** is the only format where this de-duplication is supported, and there is no option to turn it off.
+ Both ASCII **text** and **html** formats remove redundancy by defaults. This de-duplication generally makes the output more aesthetically pleasing, as demonstrated below.
+
+ A table created like this:
+ ```Java
+    PrettyTable table = new PrettyTable("Col1", "Col2", "Col3", "Col4");
+    table.addRow("A", "B", "C", "D");
+    table.addRow("A", "B", "C", "Z");
+    table.addRow("A", "B", "F", "E");
+    
+    System.out.println(table.formattedString(OutputFormat.TEXT));
+ ```
+ produces output that looks like:
+ ```
+ +------+------+------+------+
+| Col1 | Col2 | Col3 | Col4 |
++------+------+------+------+
+|  A   |  B   |  C   |  D   |
+|      |      |      |  Z   |
+|      |      |  F   |  E   |
++------+------+------+------+
+ ```
+ By default, the code recognizes the redundant fields and removes them from the rendering of the data. However, you can print the full table using the `formatString()` method that allows specifying not to de-duplicate the data.
+ 
+ In this case, using this code:
+ ```Java
+    System.out.println(table.formattedString(OutputFormat.TEXT, false));
+ ```
+ produces output that looks like:
+ ```
+ +------+------+------+------+
+| Col1 | Col2 | Col3 | Col4 |
++------+------+------+------+
+|  A   |  B   |  C   |  D   |
+|  A   |  B   |  C   |  Z   |
+|  A   |  B   |  F   |  E   |
++------+------+------+------+
+ ```
   
 ## Development
 
 Your input is welcomed.
+
+Please add unit tests for any code that you would like to change. The project has been setup with Jacoco to produce a coverage report in `target/site/jacoco/`.

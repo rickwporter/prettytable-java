@@ -61,11 +61,14 @@ public class PrettyTableTest {
     @Test
     public void testBasicHtml() {
         PrettyTable table = createBasicTable();
-        String result = table.toHtml();
+        String result = table.toHtml(false);
         String expected = loadFileContent("PrettyTable_basic.html");
         Assertions.assertEquals(expected, result);
         // same answer when going through 'formattedString()'
         result = table.formattedString(OutputFormat.HTML);
+        Assertions.assertEquals(expected, result);
+        // again with removing redundancy
+        result = table.toHtml(true);
         Assertions.assertEquals(expected, result);
     }
 
@@ -95,7 +98,7 @@ public class PrettyTableTest {
     }
 
     @Test
-    public void testFormattedText() {
+    public void testFormatted() {
         // this checks all the formatted outputs
         Map<OutputFormat, String> formats = new HashMap<OutputFormat, String>() {{
             put(OutputFormat.HTML, "html");
@@ -132,7 +135,6 @@ public class PrettyTableTest {
         }
     }
 
-
      @Test
      public void testEmpty() {
         PrettyTable table = new PrettyTable("Col1", "Col2", "Col3", "Col4");
@@ -159,6 +161,14 @@ public class PrettyTableTest {
 
         String expected = loadFileContent("PrettyTable_duplicate_undup.text");
         String result  = table.toText(false);
+        Assertions.assertEquals(expected, result);
+        result = table.formattedString(OutputFormat.TEXT, false);
+        Assertions.assertEquals(expected, result);
+        
+        expected = loadFileContent("PrettyTable_duplicate_undup.html");
+        result  = table.toHtml(false);
+        Assertions.assertEquals(expected, result);
+        result = table.formattedString(OutputFormat.HTML, false);
         Assertions.assertEquals(expected, result);
     }
 
