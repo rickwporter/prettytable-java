@@ -40,8 +40,5 @@ jobs:
     - name: Unit test and coverage
       run: mvn -B -ntp test jacoco:report
 
-    - name: Code Coverage Report
-      uses: ArtiomTr/jest-coverage-report-action@v2
-
     - name: Build with Maven
       run: mvn -B -ntp -DskipTests=true -Dcheckstyle.skip package
