@@ -40,5 +40,16 @@ jobs:
     - name: Unit test and coverage
       run: mvn -B -ntp test jacoco:report
 
+    - name: Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: target/site/jacoco/jacoco.xml
+        badge: true
+        format: markdown
+        hide_branch_rate: false
+        hide_complexity: false
+        indicators: true
+        output: both
+        
     - name: Build with Maven
       run: mvn -B -ntp -DskipTests=true -Dcheckstyle.skip package
