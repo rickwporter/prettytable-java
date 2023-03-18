@@ -1,4 +1,8 @@
 # prettytable-java
+
+![Coverage](.github/badges/jacoco.svg)
+![Branches](.github/badges/branches.svg)
+
 Display data in a tabular form with Java
 
 The data can be output in several different different forms:
