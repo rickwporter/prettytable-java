@@ -1,4 +1,4 @@
-package com.rickwporter.prettytable;
+package rickwporter.prettytable;
 
 import org.apache.commons.lang3.StringUtils;
 

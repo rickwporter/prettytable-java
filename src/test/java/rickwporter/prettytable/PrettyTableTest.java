@@ -1,7 +1,7 @@
-package com.rickwporter.prettytable;
+package rickwporter.prettytable;
 
-import com.rickwporter.prettytable.PrettyTable.CellFormat;
-import com.rickwporter.prettytable.PrettyTable.OutputFormat;
+import rickwporter.prettytable.PrettyTable.CellFormat;
+import rickwporter.prettytable.PrettyTable.OutputFormat;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
