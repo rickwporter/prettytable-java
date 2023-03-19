@@ -40,6 +40,7 @@ public final class PrettyTable {
     private List<List<Object>> rows = new ArrayList<>();
     private List<CellFormat> formats = new ArrayList<>();
     private CellFormat defaultFormat = CellFormat.CENTER;
+    private OutputFormat defaultOutput = OutputFormat.TEXT;
 
     public PrettyTable(String... hdrs) {
         this.headers.addAll(Arrays.asList(hdrs));
@@ -85,6 +86,10 @@ public final class PrettyTable {
             return this.defaultFormat;
         }
         return this.formats.get(column);
+    }
+
+    public void setOutputFormat(OutputFormat format) {
+        this.defaultOutput = format;
     }
 
     private int getMaxSizeForColumn(int column) {
@@ -324,5 +329,9 @@ public final class PrettyTable {
             return this.toHtml(removeRedundant);
         }
         return String.format("Unhandled format=%s", format);
+    }
+
+    public String toString() {
+        return this.formattedString(this.defaultOutput);
     }
 }

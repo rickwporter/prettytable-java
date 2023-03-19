@@ -56,6 +56,9 @@ public class PrettyTableTest {
         // same answer when going through 'formattedString()'
         result = table.formattedString(OutputFormat.CSV);
         Assertions.assertEquals(expected, result);
+        table.setOutputFormat(OutputFormat.CSV);
+        result = table.toString();
+        Assertions.assertEquals(expected, result);
     }
 
     @Test
@@ -70,6 +73,9 @@ public class PrettyTableTest {
         // again with removing redundancy
         result = table.toHtml(true);
         Assertions.assertEquals(expected, result);
+        table.setOutputFormat(OutputFormat.HTML);
+        result = table.toString();
+        Assertions.assertEquals(expected, result);
     }
 
     @Test
@@ -80,6 +86,9 @@ public class PrettyTableTest {
         Assertions.assertEquals(expected, result);
         // same answer when going through 'formattedString()'
         result = table.formattedString(OutputFormat.JSON);
+        Assertions.assertEquals(expected, result);
+        table.setOutputFormat(OutputFormat.JSON);
+        result = table.toString();
         Assertions.assertEquals(expected, result);
     }
 
@@ -94,6 +103,12 @@ public class PrettyTableTest {
         Assertions.assertEquals(expected, result);
         // same answer in this case because there are no duplicates
         result = table.toText(false);
+        Assertions.assertEquals(expected, result);
+        // before setting the format type, see that it defaults to text
+        result = table.toString();
+        Assertions.assertEquals(expected, result);
+        table.setOutputFormat(OutputFormat.TEXT);
+        result = table.toString();
         Assertions.assertEquals(expected, result);
     }
 
