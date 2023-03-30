@@ -203,23 +203,23 @@ public class PrettyTableTest {
          int row = 0;
 
          Assertions.assertNotNull(table.getRow(row));
-         Assertions.assertEquals(table.getCell(row, 0), "A");
-         Assertions.assertEquals(table.getCell(row, 1), "B");
-         Assertions.assertEquals(table.getCell(row, 2), "c");
+         Assertions.assertEquals("A", table.getCell(row, 0));
+         Assertions.assertEquals("B", table.getCell(row, 1));
+         Assertions.assertEquals("c", table.getCell(row, 2));
          Assertions.assertNull(table.getCell(row, 3));
 
          row = 1;
          Assertions.assertNotNull(table.getRow(row));
-         Assertions.assertEquals(table.getCell(row, 0), "1");
-         Assertions.assertEquals(table.getCell(row, 1), "1024");
-         Assertions.assertEquals(table.getCell(row, 2), "65535");
+         Assertions.assertEquals("1", table.getCell(row, 0));
+         Assertions.assertEquals("1024", table.getCell(row, 1));
+         Assertions.assertEquals("65535", table.getCell(row, 2));
         Assertions.assertNull(table.getCell(row, 3));
  
         row = 2;
         Assertions.assertNotNull(table.getRow(row));
-        Assertions.assertEquals(table.getCell(row, 0), "Washington");
-        Assertions.assertEquals(table.getCell(row, 1), "Adams");
-        Assertions.assertEquals(table.getCell(row, 2), "Jefferson");
+        Assertions.assertEquals("Washington", table.getCell(row, 0));
+        Assertions.assertEquals("Adams", table.getCell(row, 1));
+        Assertions.assertEquals("Jefferson", table.getCell(row, 2));
         Assertions.assertNull(table.getCell(row, 3));
         
         row = 3;
