@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,6 +102,39 @@ public final class PrettyTable {
             }
         }
         return maxSize;
+    }
+
+    private void sortRows(List<Integer> indices) {
+        Collections.sort(this.rows, (row1, row2) -> {
+            for (Integer idx : indices) {
+                String s1 = row1.get(idx).toString();
+                String s2 = row2.get(idx).toString();
+                int value = 0;
+                try {
+                    Float f1 = Float.parseFloat(s1);
+                    Float f2 = Float.parseFloat(s2);
+                    value = f1.compareTo(f2);
+                } catch (NumberFormatException ex) {
+                    value = s1.compareTo(s2);
+                }
+                if (value != 0) {
+                    return value;
+                }
+            }
+            return 0;
+        });
+    }
+
+    public void sortByHeader(String... order) {
+        List<Integer> indices = new ArrayList<>();
+        for (String hdr : order) {
+            indices.add(this.headers.indexOf(hdr));
+        }
+        this.sortRows(indices);
+    }
+
+    public void sortByIndex(Integer... indices) {
+        this.sortRows(Arrays.asList(indices));
     }
 
     private int getMaxColumns() {

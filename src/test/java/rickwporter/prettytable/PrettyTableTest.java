@@ -255,6 +255,36 @@ public class PrettyTableTest {
            String result = table.formattedString(entry.getKey());
            Assertions.assertEquals(expected, result);
         }
-
      }
+
+     @Test
+     public void testSort() {
+        PrettyTable table = new PrettyTable("A", "B", "C");
+        table.addRow("10", "2", "3");
+        table.addRow("10", "20", "12");
+        table.addRow(10, 10, 45);
+        table.addRow("x", "y", "z");
+
+        table.sortByIndex(0, 1);
+        Assertions.assertEquals("2", table.getCell(0, 1));
+        Assertions.assertEquals(10, table.getCell(1, 1));
+        Assertions.assertEquals("20", table.getCell(2, 1));
+        Assertions.assertEquals("y", table.getCell(3, 1));
+
+        table.sortByHeader("C");
+        Assertions.assertEquals("2", table.getCell(0, 1));
+        Assertions.assertEquals("20", table.getCell(1, 1));
+        Assertions.assertEquals(10, table.getCell(2, 1));
+        Assertions.assertEquals("y", table.getCell(3, 1));
+
+        // below comparisons use 'toString()' because order is non-deterministic
+        table.sortByIndex(0);
+        Assertions.assertEquals("10", table.getCell(0, 0).toString());
+        Assertions.assertEquals("10", table.getCell(1, 0).toString());
+        Assertions.assertEquals("10", table.getCell(2, 0).toString());
+        Assertions.assertEquals("x", table.getCell(3, 0).toString());
+
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.sortByIndex(500));
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.sortByHeader("Q"));
+    }
 }

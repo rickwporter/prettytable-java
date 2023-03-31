@@ -167,7 +167,24 @@ The **html** output will have the appropriate `style="text-align:xxx"` attribute
 |  A   |  B   |  F   |  E   |
 +------+------+------+------+
  ```
-  
+
+### Sorting
+The tables can be sorted by any of the columns. The sorting can be done by header value, or by column indices. The sorting changes the rows, so it must be done after populating the table to be effective. The sorting functions allow specifing multiple headers or indices to avoid non-deterministic when a chosen column matches.
+
+The sorting looks like this:
+```Java
+    PrettyTable table = new PrettyTable("Col1", "Col2", "Col3", "Col4");
+    table.addRow("A", "B", "C", "D");
+    table.addRow("A", "A", "C", "Z");
+    table.addRow("A", "C", "F", "E");
+
+    // below sorts are equivalent
+    table.sortByIndex(0, 1);
+    table.sortByHeader("Col1", "Col2");
+```
+
+**NOTE:** specifying an out of range index, or a header that is not found will result in a `ArrayIndexOutOfBoundsException`!
+
 ## Development
 
 Your input is welcomed.
