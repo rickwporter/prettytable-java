@@ -61,12 +61,12 @@ public final class PrettyTable {
         return this.rows.get(rowIndex);
     }
 
-    public String getCell(int rowIndex, int columnIndex) {
+    public Object getCell(int rowIndex, int columnIndex) {
         List<Object> row = this.getRow(rowIndex);
         if (row == null || row.size() <= columnIndex) {
             return null;
         }
-        return row.get(columnIndex).toString();
+        return row.get(columnIndex);
     }
 
     public void setFormat(int column, CellFormat fmt) {

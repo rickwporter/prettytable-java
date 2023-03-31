@@ -210,9 +210,9 @@ public class PrettyTableTest {
 
          row = 1;
          Assertions.assertNotNull(table.getRow(row));
-         Assertions.assertEquals("1", table.getCell(row, 0));
-         Assertions.assertEquals("1024", table.getCell(row, 1));
-         Assertions.assertEquals("65535", table.getCell(row, 2));
+         Assertions.assertEquals(1, table.getCell(row, 0));
+         Assertions.assertEquals(1024, table.getCell(row, 1));
+         Assertions.assertEquals(65535, table.getCell(row, 2));
         Assertions.assertNull(table.getCell(row, 3));
  
         row = 2;
