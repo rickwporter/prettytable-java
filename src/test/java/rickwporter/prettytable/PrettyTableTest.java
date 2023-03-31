@@ -187,6 +187,22 @@ public class PrettyTableTest {
         Assertions.assertEquals(expected, result);
     }
 
+    @Test
+    public void testDuplicatedMixed() {
+        PrettyTable table = new PrettyTable("A", "B", "C");
+        table.setFormats(CellFormat.RIGHT, CellFormat.RIGHT, CellFormat.RIGHT);
+        table.addRow("10", "2", "3");
+        table.addRow(10, 2, 45);
+        table.addRow("10", "20", "12");
+        table.addRow("x", "y", "z");
+
+        String expected = loadFileContent("PrettyTable_duplicate_mixed.text");
+        Assertions.assertEquals(expected, table.formattedString(OutputFormat.TEXT));
+
+        expected = loadFileContent("PrettyTable_duplicate_mixed.html");
+        Assertions.assertEquals(expected, table.formattedString(OutputFormat.HTML));
+    }
+
      @Test
      public void testQuotedCsv() {
          PrettyTable table = new PrettyTable("one", "two, with comma", "three");

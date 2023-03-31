@@ -200,7 +200,7 @@ public final class PrettyTable {
             List<String> fullRow = new ArrayList<String>(currentRow);  // make a copy before manipulating
             if (removeRedundant) {
                 for (int i = 0; i < lastRow.size(); i++) {
-                    if (lastRow.get(i) != currentRow.get(i)) {
+                    if (!lastRow.get(i).equals(currentRow.get(i))) {
                         break;
                     }
                     currentRow.set(i, "");
@@ -274,7 +274,7 @@ public final class PrettyTable {
             List<String> fullRow = new ArrayList<String>(currentRow);  // make a copy before manipulating
             if (removeRedundant) {
                 for (int i = 0; i < lastRow.size(); i++) {
-                    if (lastRow.get(i) != currentRow.get(i)) {
+                    if (!lastRow.get(i).equals(currentRow.get(i))) {
                         break;
                     }
                     currentRow.set(i, "");
