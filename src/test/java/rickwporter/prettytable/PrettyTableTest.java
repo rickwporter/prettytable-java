@@ -1,6 +1,6 @@
 package rickwporter.prettytable;
 
-import rickwporter.prettytable.PrettyTable.CellFormat;
+import rickwporter.prettytable.PrettyTable.HorizontalAlign;
 import rickwporter.prettytable.PrettyTable.OutputFormat;
 
 import org.junit.jupiter.api.Test;
@@ -42,8 +42,8 @@ public class PrettyTableTest {
 
     PrettyTable createFormattedTable() {
         PrettyTable table = createBasicTable();
-        table.setFormat(0, CellFormat.LEFT);
-        table.setFormat(2, CellFormat.RIGHT);
+        table.setHorizAlign(0, HorizontalAlign.LEFT);
+        table.setHorizAlign(2, HorizontalAlign.RIGHT);
         return table;
     }
 
@@ -127,7 +127,7 @@ public class PrettyTableTest {
         }
 
         // update the table setting all the formats at once, and get same answers
-        table.setFormats(CellFormat.LEFT, CellFormat.CENTER, CellFormat.RIGHT);
+        table.setHorizAligns(HorizontalAlign.LEFT, HorizontalAlign.CENTER, HorizontalAlign.RIGHT);
         for (Map.Entry<OutputFormat, String> entry: formats.entrySet()) {
             String expected = loadFileContent("PrettyTable_formatted." + entry.getValue());
             String result = table.formattedString(entry.getKey());
@@ -190,7 +190,7 @@ public class PrettyTableTest {
     @Test
     public void testDuplicatedMixed() {
         PrettyTable table = new PrettyTable("A", "B", "C");
-        table.setFormats(CellFormat.RIGHT, CellFormat.RIGHT, CellFormat.RIGHT);
+        table.setHorizAligns(HorizontalAlign.RIGHT, HorizontalAlign.RIGHT, HorizontalAlign.RIGHT);
         table.addRow("10", "2", "3");
         table.addRow(10, 2, 45);
         table.addRow("10", "20", "12");

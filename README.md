@@ -104,9 +104,9 @@ Using the **json** format (e.g. `OutputFormat.JSON`), you get the following outp
 ### Alignment
 Both ASCII **text** and **html** formats support different alignments. Here's how you would update the above table:
 ```Java
-import com.rickwporter.prettytable.PrettyTable.CellFormat;
+import com.rickwporter.prettytable.PrettyTable.HorizontalAlign;
 
-      table.setFormats(CellFormat.LEFT, CellFormat.CENTER, CellFormat.RIGHT);
+      table.setHorizAligns(HorizontalAlign.LEFT, HorizontalAlign.CENTER, HorizontalAlign.RIGHT);
 ```
 
 Now, when the **text** output is generated, the output will look like this:

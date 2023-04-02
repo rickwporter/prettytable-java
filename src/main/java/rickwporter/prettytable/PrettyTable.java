@@ -19,13 +19,13 @@ public final class PrettyTable {
     private static final String HTML_CELL_BODY_TAG = "td";
     private static final String HTML_CELL_HEADER_TAG = "th";
 
-    public enum CellFormat {
+    public enum HorizontalAlign {
         CENTER("text-align:center"),
         LEFT("text-align:left"),
         RIGHT("text-align:right");
 
         private final String htmlStyle;
-        CellFormat(String html) {
+        HorizontalAlign(String html) {
             this.htmlStyle = html;
         }
         public String getHtmlStyle() {
@@ -42,8 +42,8 @@ public final class PrettyTable {
 
     private List<String> headers = new ArrayList<>();
     private List<List<Object>> rows = new ArrayList<>();
-    private List<CellFormat> formats = new ArrayList<>();
-    private CellFormat defaultFormat = CellFormat.CENTER;
+    private List<HorizontalAlign> hAligns = new ArrayList<>();
+    private HorizontalAlign defaultHorizontal = HorizontalAlign.CENTER;
     private OutputFormat defaultOutput = OutputFormat.TEXT;
 
     public PrettyTable(String... hdrs) {
@@ -73,23 +73,23 @@ public final class PrettyTable {
         return row.get(columnIndex);
     }
 
-    public void setFormat(int column, CellFormat fmt) {
-        for (int cIdx = this.formats.size(); cIdx <= column; cIdx++) {
-            this.formats.add(this.defaultFormat);
+    public void setHorizAlign(int column, HorizontalAlign fmt) {
+        for (int cIdx = this.hAligns.size(); cIdx <= column; cIdx++) {
+            this.hAligns.add(this.defaultHorizontal);
         }
-        this.formats.set(column, fmt);
+        this.hAligns.set(column, fmt);
     }
 
-    public void setFormats(CellFormat... fmts) {
-        this.formats.clear();
-        this.formats.addAll(Arrays.asList(fmts));
+    public void setHorizAligns(HorizontalAlign... fmts) {
+        this.hAligns.clear();
+        this.hAligns.addAll(Arrays.asList(fmts));
     }
 
-    private CellFormat getFormat(int column) {
-        if (this.formats.size() <= column) {
-            return this.defaultFormat;
+    private HorizontalAlign getHorizAlign(int column) {
+        if (this.hAligns.size() <= column) {
+            return this.defaultHorizontal;
         }
-        return this.formats.get(column);
+        return this.hAligns.get(column);
     }
 
     public void setOutputFormat(OutputFormat format) {
@@ -159,7 +159,7 @@ public final class PrettyTable {
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
             String cValue = row.get(cIdx).toString();
             Integer cSize = maxSizes.get(cIdx);
-            switch (getFormat(cIdx)) {
+            switch (getHorizAlign(cIdx)) {
             case LEFT:
                 result.append(" " + StringUtils.rightPad(cValue, cSize) + " ");
                 break;
@@ -237,10 +237,10 @@ public final class PrettyTable {
     }
 
     String htmlColumnFormat(Integer column) {
-        if (this.formats.isEmpty()) {
+        if (this.hAligns.isEmpty()) {
             return "";
         }
-        return " style=\"" + this.getFormat(column).getHtmlStyle() + "\"";
+        return " style=\"" + this.getHorizAlign(column).getHtmlStyle() + "\"";
     }
 
     String htmlRow(List<? extends Object> row, String initIndent, String indent, String cellTag) {
