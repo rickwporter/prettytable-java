@@ -1,7 +1,10 @@
 package rickwporter.prettytable;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -213,29 +216,24 @@ public final class PrettyTable {
         return result.toString();
     }
 
-    String csvEncode(String orig) {
-        if (!orig.contains(",")) {
-            return orig;
-        }
-        // put the original string in quotes
-        return "\"" + orig + "\"";
-    }
-
-    String csvRow(List<? extends Object> row) {
-        return StringUtils.join(
-            row.stream().map(c -> csvEncode(c.toString())).collect(Collectors.toList()), ","
-        ) + "\n";
-    }
-
     String toCsv() {
-        StringBuilder result = new StringBuilder();
-        if (!this.headers.isEmpty()) {
-            result.append(csvRow(this.headers));
+        try {
+            StringBuilder result = new StringBuilder();
+            CSVFormat format = CSVFormat.DEFAULT.builder().setRecordSeparator("\n").build();
+            CSVPrinter printer = new CSVPrinter(result, format);
+            if (!this.headers.isEmpty()) {
+                printer.printRecord(this.headers);
+            }
+            for (List<? extends Object> row : this.rows) {
+                List<String> current = row.stream().map(c -> c.toString()).collect(Collectors.toList());
+                printer.printRecord(current);
+            }
+            printer.close();
+            return result.toString();
+        } catch (IOException ex) {
+            // nothing to do here
         }
-        for (List<Object> row: this.rows) {
-            result.append(csvRow(row));
-        }
-        return result.toString();
+        return null;
     }
 
     String htmlColumnFormat(Integer column) {

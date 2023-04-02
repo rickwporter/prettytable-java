@@ -303,4 +303,17 @@ public class PrettyTableTest {
         Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.sortByIndex(500));
         Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.sortByHeader("Q"));
     }
+
+    @Test
+    public void testCsvEncoding() {
+        // CSV encoding needs to update/encapsulate special characters
+        PrettyTable table = new PrettyTable("Col1", "Col2", "Col3");
+        table.addRow("contains, a commas", "boring", "contains, multi, commas");
+        table.addRow("crlf\r\nline 2", "contains\nnewline", "multiple\r\nnew\nlines");
+        table.addRow("single' quote", "multi 'single' quotes", "oxymoron");
+        table.addRow("make it a \"double-double\"", "single \"double", "undouble");
+
+        String expected = loadFileContent("PrettyTable_csv_encoded.csv");
+        Assertions.assertEquals(expected, table.toCsv());
+    }
 }

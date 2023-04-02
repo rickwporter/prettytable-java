@@ -1,0 +1,9 @@
+Col1,Col2,Col3
+"contains, a commas",boring,"contains, multi, commas"
+"crlf
+line 2","contains
+newline","multiple
+new
+lines"
+single' quote,multi 'single' quotes,oxymoron
+"make it a ""double-double""","single ""double",undouble
