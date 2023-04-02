@@ -107,7 +107,9 @@
           <failOnWarning>true</failOnWarning>
           <scriptableOutput>true</scriptableOutput>
           <usedDependencies>
+            <!-- Not usre why Apache commons (or junit) need to be here -->
             <dependency>org.apache.commons:commons-lang3</dependency>
+            <dependency>org.apache.commons:commons-csv</dependency>
             <dependency>org.junit.jupiter:junit-jupiter-api</dependency>
           </usedDependencies>
           <silent>true</silent>
