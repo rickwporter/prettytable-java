@@ -316,4 +316,15 @@ public class PrettyTableTest {
         String expected = loadFileContent("PrettyTable_csv_encoded.csv");
         Assertions.assertEquals(expected, table.toCsv());
     }
+
+    @Test
+    public void testTextNewlines() {
+        PrettyTable table = new PrettyTable("A", "B", "C", "D");
+        table.setHorizAligns(HorizontalAlign.LEFT, HorizontalAlign.RIGHT, HorizontalAlign.CENTER, HorizontalAlign.LEFT);
+        table.addRow("a", "12\n345\n67890\r\nabc", "testing\na\n", "\nempty\nblank");
+        table.addRow("abc\n123", "123\n4567", "aaa", "bbb");
+
+        String expected = loadFileContent("PrettyTable_newlines.text");
+        Assertions.assertEquals(expected, table.formattedString(OutputFormat.TEXT));
+    }
 }

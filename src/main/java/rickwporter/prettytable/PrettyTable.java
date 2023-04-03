@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 
 public final class PrettyTable {
     private static final String HTML_TABLE_TAG = "table";
@@ -18,6 +20,7 @@ public final class PrettyTable {
     private static final String HTML_ROW_TAG = "tr";
     private static final String HTML_CELL_BODY_TAG = "td";
     private static final String HTML_CELL_HEADER_TAG = "th";
+    private static final Pattern NEWLINE = Pattern.compile("\\R");
 
     public enum HorizontalAlign {
         CENTER("text-align:center"),
@@ -99,9 +102,11 @@ public final class PrettyTable {
     private int getMaxWidthForColumn(int column) {
         int maxWidth = column >= this.headers.size() ? 0 : this.headers.get(column).length();
         for (List<Object> row : this.rows) {
-            int rowWidth = row.get(column).toString().length();
-            if (rowWidth > maxWidth) {
-                maxWidth = rowWidth;
+            String cellText = row.get(column).toString();
+            List<String> cellLines = Arrays.asList(NEWLINE.split(cellText));
+            int cellWidth = cellLines.stream().map(String::length).max(Integer::compare).get();
+            if (cellWidth > maxWidth) {
+                maxWidth = cellWidth;
             }
         }
         return maxWidth;
@@ -155,9 +160,25 @@ public final class PrettyTable {
 
     private String textRow(List<? extends Object> row, List<Integer> maxWidths) {
         StringBuilder result = new StringBuilder();
+        List<List<String>> splits = row.stream()
+            .map(c -> Arrays.asList(NEWLINE.split(c.toString())))
+            .collect(Collectors.toList());
+        int maxLines = splits.stream().map(c -> c.size()).max(Integer::compare).get();
+        for (int idx = 0; idx < maxLines; idx++) {
+            List<String> line = new ArrayList<>();
+            for (List<String> column : splits) {
+                line.add(idx < column.size() ? column.get(idx) : "");
+            }
+            result.append(this.textRowLine(line, maxWidths));
+        }
+        return result.toString();
+    }
+
+    private String textRowLine(List<String> row, List<Integer> maxWidths) {
+        StringBuilder result = new StringBuilder();
         result.append("|");
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
-            String cValue = row.get(cIdx).toString();
+            String cValue = row.get(cIdx);
             Integer cWidth = maxWidths.get(cIdx);
             switch (getHorizAlign(cIdx)) {
             case LEFT:
