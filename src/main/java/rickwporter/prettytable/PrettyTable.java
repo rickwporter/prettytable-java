@@ -96,15 +96,15 @@ public final class PrettyTable {
         this.defaultOutput = format;
     }
 
-    private int getMaxSizeForColumn(int column) {
-        int maxSize = column >= this.headers.size() ? 0 : this.headers.get(column).length();
+    private int getMaxWidthForColumn(int column) {
+        int maxWidth = column >= this.headers.size() ? 0 : this.headers.get(column).length();
         for (List<Object> row : this.rows) {
-            int rowSize = row.get(column).toString().length();
-            if (rowSize > maxSize) {
-                maxSize = rowSize;
+            int rowWidth = row.get(column).toString().length();
+            if (rowWidth > maxWidth) {
+                maxWidth = rowWidth;
             }
         }
-        return maxSize;
+        return maxWidth;
     }
 
     private void sortRows(List<Integer> indices) {
@@ -145,29 +145,29 @@ public final class PrettyTable {
         return this.headers.isEmpty() ? this.rows.get(0).size() : this.headers.size();
     }
 
-    private List<Integer> getMaxSizes() {
-        List<Integer> maxSizes = new ArrayList<>();
+    private List<Integer> getMaxWidths() {
+        List<Integer> maxWidths = new ArrayList<>();
         for (int cIdx = 0; cIdx < this.getMaxColumns(); cIdx++) {
-            maxSizes.add(getMaxSizeForColumn(cIdx));
+            maxWidths.add(getMaxWidthForColumn(cIdx));
         }
-        return maxSizes;
+        return maxWidths;
     }
 
-    private String textRow(List<? extends Object> row, List<Integer> maxSizes) {
+    private String textRow(List<? extends Object> row, List<Integer> maxWidths) {
         StringBuilder result = new StringBuilder();
         result.append("|");
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
             String cValue = row.get(cIdx).toString();
-            Integer cSize = maxSizes.get(cIdx);
+            Integer cWidth = maxWidths.get(cIdx);
             switch (getHorizAlign(cIdx)) {
             case LEFT:
-                result.append(" " + StringUtils.rightPad(cValue, cSize) + " ");
+                result.append(" " + StringUtils.rightPad(cValue, cWidth) + " ");
                 break;
             case RIGHT:
-                result.append(" " + StringUtils.leftPad(cValue, cSize) + " ");
+                result.append(" " + StringUtils.leftPad(cValue, cWidth) + " ");
                 break;
             case CENTER:
-                result.append(StringUtils.center(cValue, cSize + 2));
+                result.append(StringUtils.center(cValue, cWidth + 2));
                 break;
             }
             result.append("|");
@@ -176,11 +176,11 @@ public final class PrettyTable {
         return result.toString();
     }
 
-    private String textRule(List<Integer> maxSizes) {
+    private String textRule(List<Integer> maxWidths) {
         StringBuilder result = new StringBuilder();
         result.append("+");
         for (int i = 0; i < this.getMaxColumns(); i++) {
-            for (int j = 0; j < maxSizes.get(i) + 2; j++) {
+            for (int j = 0; j < maxWidths.get(i) + 2; j++) {
                 result.append("-");
             }
             result.append("+");
@@ -190,13 +190,13 @@ public final class PrettyTable {
     }
 
     String toText(boolean removeRedundant) {
-        List<Integer> maxSizes = getMaxSizes();
+        List<Integer> maxWidths = getMaxWidths();
         StringBuilder result = new StringBuilder();
         if (!this.headers.isEmpty()) {
-            result.append(textRule(maxSizes));
-            result.append(textRow(this.headers, maxSizes));
+            result.append(textRule(maxWidths));
+            result.append(textRow(this.headers, maxWidths));
         }
-        result.append(textRule(maxSizes));
+        result.append(textRule(maxWidths));
         List<String> lastRow = new ArrayList<>();
         for (List<Object> row : this.rows) {
             List<String> currentRow = row.stream().map(c -> c.toString()).collect(Collectors.toList());
@@ -210,9 +210,9 @@ public final class PrettyTable {
                 }
                 lastRow = fullRow;
             }
-            result.append(textRow(currentRow, maxSizes));
+            result.append(textRow(currentRow, maxWidths));
         }
-        result.append(textRule(maxSizes));
+        result.append(textRule(maxWidths));
         return result.toString();
     }
 
