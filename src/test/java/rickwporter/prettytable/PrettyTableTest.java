@@ -327,4 +327,50 @@ public class PrettyTableTest {
         String expected = loadFileContent("PrettyTable_newlines.text");
         Assertions.assertEquals(expected, table.formattedString(OutputFormat.TEXT));
     }
+
+    @Test
+    public void testNested() {
+        PrettyTable letters = new PrettyTable("A", "B", "C");
+        letters.setHorizAligns(HorizontalAlign.RIGHT, HorizontalAlign.LEFT, HorizontalAlign.CENTER);
+        letters.addRow("abc", "def", "ghij");
+        letters.addRow("klmn", "o", "pqr");
+        letters.addRow("st", "uvx", "yz");
+
+        PrettyTable numbers = new PrettyTable("First", "Second", "Third");
+        numbers.addRow(123, 4567, 89012);
+        numbers.addRow("3456", "78", 901);
+        numbers.addRow(23456, 7890, 12);
+
+        PrettyTable big = new PrettyTable("Table name", "Data");
+        big.setHorizAligns(HorizontalAlign.CENTER, HorizontalAlign.LEFT);
+        big.addRow("Letters", letters);
+        big.addRow("Numbers", numbers);
+        
+        for (Map.Entry<OutputFormat, String> entry: OUTPUT_FORMAT_EXTENSIONS.entrySet()) {
+            String expected = loadFileContent("PrettyTable_nested." + entry.getValue());
+            big.setOutputFormat(entry.getKey());
+            letters.setOutputFormat(entry.getKey());
+            numbers.setOutputFormat(entry.getKey());
+            String result = big.toString();
+            Assertions.assertEquals(expected, result);
+        }
+
+        String expected = loadFileContent("PrettyTable_nested_mixed.html");
+        letters.setOutputFormat(OutputFormat.TEXT);
+        numbers.setOutputFormat(OutputFormat.CSV);
+        big.setOutputFormat(OutputFormat.HTML);
+        Assertions.assertEquals(expected, big.toString());
+
+        expected = loadFileContent("PrettyTable_nested_mixed.text");
+        letters.setOutputFormat(OutputFormat.JSON);
+        numbers.setOutputFormat(OutputFormat.CSV);
+        big.setOutputFormat(OutputFormat.TEXT);
+        Assertions.assertEquals(expected, big.toString());
+
+        expected = loadFileContent("PrettyTable_nested_mixed.json");
+        letters.setOutputFormat(OutputFormat.HTML);
+        numbers.setOutputFormat(OutputFormat.CSV);
+        big.setOutputFormat(OutputFormat.JSON);
+        Assertions.assertEquals(expected, big.toString());
+    }
 }

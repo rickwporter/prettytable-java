@@ -1,0 +1,14 @@
+[
+    [
+        "Table name",
+        "Data"
+    ],
+    {
+        "Table name": "Letters",
+        "Data": "<table>\n    <thead>\n        <tr>\n            <th style=\"text-align:right\">A</th>\n            <th style=\"text-align:left\">B</th>\n            <th style=\"text-align:center\">C</th>\n        </tr>\n    </thead>\n    <tbody>\n        <tr>\n            <td style=\"text-align:right\">abc</td>\n            <td style=\"text-align:left\">def</td>\n            <td style=\"text-align:center\">ghij</td>\n        </tr>\n        <tr>\n            <td style=\"text-align:right\">klmn</td>\n            <td style=\"text-align:left\">o</td>\n            <td style=\"text-align:center\">pqr</td>\n        </tr>\n        <tr>\n            <td style=\"text-align:right\">st</td>\n            <td style=\"text-align:left\">uvx</td>\n            <td style=\"text-align:center\">yz</td>\n        </tr>\n    </tbody>\n</table>\n"
+    },
+    {
+        "Table name": "Numbers",
+        "Data": "First,Second,Third\n123,4567,89012\n3456,78,901\n23456,7890,12\n"
+    }
+]

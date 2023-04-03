@@ -289,7 +289,20 @@ public final class PrettyTable {
         result.append(String.format("%s<%s>\n", indent, HTML_BODY_TAG));
         List<String> lastRow = new ArrayList<>();
         for (List<Object> row : this.rows) {
-            List<String> currentRow = row.stream().map(c -> c.toString()).collect(Collectors.toList());
+            List<String> currentRow = row.stream()
+                .map(c -> {
+                    if (c instanceof PrettyTable)  {
+                        PrettyTable t = (PrettyTable) c;
+                        if (t.defaultOutput == OutputFormat.HTML) {
+                            String out = "\n" + t.toHtml(true);
+                            out = out.replaceAll("\n", "\n" + indent + indent + indent + indent);
+                            return out.substring(0, out.lastIndexOf(indent));
+                        }
+                        return t.toString().replace("\n", "<br/>");
+                    }
+                    return c.toString();
+                })
+                .collect(Collectors.toList());
             List<String> fullRow = new ArrayList<String>(currentRow);  // make a copy before manipulating
             if (removeRedundant) {
                 for (int i = 0; i < lastRow.size(); i++) {
@@ -317,23 +330,41 @@ public final class PrettyTable {
         } catch (NumberFormatException ex) {
             // nothing to do here, just double-quote as below
         }
-        return String.format("\"%s\"", object.toString());
+        return String.format(
+            "\"%s\"",
+            object.toString()
+                .replace("\r", "\\r")
+                .replace("\n", "\\n")
+                .replace("\"", "\\\"")
+            );
+    }
+
+    String jsonValue(Object cellObj, String initIndent, String indent) {
+        if (cellObj instanceof PrettyTable) {
+            PrettyTable t = (PrettyTable) cellObj;
+            if (t.defaultOutput == OutputFormat.JSON) {
+                String out = t.toJson().replace("\n", "\n" + initIndent);
+                return out.substring(0, out.lastIndexOf("\n" + initIndent));
+            }
+        }
+        return jsonEncode(cellObj);
     }
 
     String jsonRow(List<Object> row, String initIndent, String indent) {
         List<String> rowValues = new ArrayList<>();
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
+            String value = this.jsonValue(row.get(cIdx), initIndent + indent, indent);
             if (!this.headers.isEmpty()) {
                 rowValues.add(
                     String.format("%s%s\"%s\": %s",
                         initIndent,
                         indent,
                         this.headers.get(cIdx),
-                        jsonEncode(row.get(cIdx)))
+                        value)
                 );
             } else {
                 rowValues.add(
-                    String.format("%s%s%s", initIndent, indent, jsonEncode(row.get(cIdx)))
+                    String.format("%s%s%s", initIndent, indent, value)
                 );
             }
         }
@@ -346,7 +377,7 @@ public final class PrettyTable {
         result.append("[\n");
         String entryPrefix = "";
         if (!this.headers.isEmpty()) {
-          result.append(String.format("%s[\n", indent));
+            result.append(String.format("%s[\n", indent));
             List<String> headerValues = this.headers.stream()
                 .map(h -> String.format("%s%s\"%s\"", indent, indent, h))
                 .collect(Collectors.toList());
