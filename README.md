@@ -25,8 +25,8 @@ Here's an example of the standard **text** output:
 ## Usage
 Here are the basics for how to create a `PrettyTable` as shown above:
 ```Java
-import com.rickwporter.prettytable.PrettyTable;
-import com.rickwporter.prettytable.PrettyTable.OutputFormat;
+import rickporter.prettytable.PrettyTable;
+import rickporter.prettytable.PrettyTable.OutputFormat;
 
       PrettyTable table = new PrettyTable("Column A", "Column 2", "Column III");
       table.addRow("A", "B", "c");
@@ -104,7 +104,7 @@ Using the **json** format (e.g. `OutputFormat.JSON`), you get the following outp
 ### Alignment
 Both ASCII **text** and **html** formats support different alignments. Here's how you would update the above table:
 ```Java
-import com.rickwporter.prettytable.PrettyTable.HorizontalAlign;
+import rickporter.prettytable.PrettyTable.HorizontalAlign;
 
       table.setHorizAligns(HorizontalAlign.LEFT, HorizontalAlign.CENTER, HorizontalAlign.RIGHT);
 ```
