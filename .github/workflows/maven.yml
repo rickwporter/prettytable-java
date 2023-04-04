@@ -69,5 +69,5 @@ jobs:
       with:
         default_author: github_actor
         token: ${{ secrets.GITHUB_TOKEN }}
-        message: 'Update badges'
+        message: 'Update code coverage badges'
         add: '*.svg'
