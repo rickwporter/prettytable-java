@@ -8,7 +8,7 @@ Display data in a tabular form with Java
 The data can be output in several different different forms:
 * **text** - attractive ASCII format
 * **csv** - comma separated values format
-* **html** - HyperText Markup Lnaguage (HTML) format
+* **html** - HyperText Markup Language (HTML) format
 * **json** - JavaScript Object Notation (JSON) format
 
 Here's an example of the standard **text** output:
