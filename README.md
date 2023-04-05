@@ -36,9 +36,9 @@ import rickporter.prettytable.PrettyTable.OutputFormat;
       System.out.println(table.formattedString(OutputFormat.TEXT));
 ```
 
-You can use `PrettyTable::toString()` as an alternative to using the `PrettyTable::formattedString()`. If you want a different format (default is **text**, you can set it with `PrettyTable::setOutputFormat()`. There is no `toString()` equivalent to say whether the remove the redundant entries (for **text** and **html**). The code below would replace the `println()` call from above:
+You can use `PrettyTable::toString()` as an alternative to using the `PrettyTable::formattedString()`. If you want a format other than **text**, you can set it with `PrettyTable::setOutputFormat()`. There is no `toString()` equivalent to say whether the remove the redundant entries (for **text** and **html**). The code below would replace the `println()` call from above:
 ```Java
-      table.setOutputFormat(OutputFormat.TEXT);
+      table.setOutputFormat(OutputFormat.HTML);
       System.out.println(table.toString());
 ```
 
