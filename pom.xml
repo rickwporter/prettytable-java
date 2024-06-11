@@ -15,7 +15,7 @@
 
     <!-- Main versions -->
     <version.apache.lang3>3.14.0</version.apache.lang3>
-    <version.apache.csv>1.10.0</version.apache.csv>
+    <version.apache.csv>1.11.0</version.apache.csv>
 
     <!-- JUnit versions -->
     <version.jupiter.junit>5.7.0</version.jupiter.junit>
