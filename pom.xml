@@ -14,15 +14,15 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
     <!-- Main versions -->
-    <version.apache.lang3>3.14.0</version.apache.lang3>
-    <version.apache.csv>1.11.0</version.apache.csv>
+    <version.apache.lang3>3.20.0</version.apache.lang3>
+    <version.apache.csv>1.14.1</version.apache.csv>
 
     <!-- JUnit versions -->
-    <version.jupiter.junit>5.7.0</version.jupiter.junit>
-    <version.plugin.jacoco>0.8.7</version.plugin.jacoco>
+    <version.jupiter.junit>5.14.1</version.jupiter.junit>
+    <version.plugin.jacoco>0.8.14</version.plugin.jacoco>
 
     <!-- Checkstyle -->
-    <version.plugin.checkstyle>3.2.1</version.plugin.checkstyle>
+    <version.plugin.checkstyle>3.6.0</version.plugin.checkstyle>
     <version.checkstyle>8.30</version.checkstyle>
   </properties>
 
