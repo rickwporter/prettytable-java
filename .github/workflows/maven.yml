@@ -10,9 +10,11 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
@@ -71,3 +73,4 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         message: 'Update code coverage badges'
         add: '*.svg'
+        branch: main
