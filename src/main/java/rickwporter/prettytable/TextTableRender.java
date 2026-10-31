@@ -12,7 +12,10 @@ import rickwporter.prettytable.PrettyTable.HorizontalAlign;
 class TextTableRender implements TableRenderInterface {
     private static final Pattern NEWLINE = Pattern.compile("\\R");
 
-    private String pad(String value, int width, HorizontalAlign align) {
+    String pad(String value, int width, HorizontalAlign align) {
+        if (align == null) {
+            throw new IllegalArgumentException("Unsupported HorizontalAlignment: " + align);
+        }
         switch (align) {
         case LEFT:
             return " " + StringUtils.rightPad(value, width) + " ";
@@ -21,7 +24,7 @@ class TextTableRender implements TableRenderInterface {
         case CENTER:
             return StringUtils.center(value, width + 2);
         default:
-            return StringUtils.center(value, width + 2);
+            throw new IllegalArgumentException("Unsupported HorizontalAlignment: " + align);
         }
     }
 
