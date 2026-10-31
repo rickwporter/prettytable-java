@@ -49,5 +49,5 @@ test: ## Run unittests
 	$(MVN_CMD) $(MVN_ARGS) test
 
 coverage: test ## Generate code coverage reports
-	$(MVN_CMD) $(MVN_ARGS) jacoco:report
+	$(MVN_CMD) $(MVN_ARGS) jacoco:report jacoco-console-reporter:report
 	@echo "Details in target/site/jacoco/index.html"
