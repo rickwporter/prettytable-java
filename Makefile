@@ -14,6 +14,8 @@ MVN_CMD ?= mvn
 #################################################
 default: help
 
+all: lint coverage depend-check ## Perform lint, coverage, and dependency checking
+
 help: ## This message
 	@echo "===================="
 	@echo " Available Commands"
