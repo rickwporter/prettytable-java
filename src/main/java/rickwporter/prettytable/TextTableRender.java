@@ -12,6 +12,19 @@ import rickwporter.prettytable.PrettyTable.HorizontalAlign;
 class TextTableRender implements TableRenderInterface {
     private static final Pattern NEWLINE = Pattern.compile("\\R");
 
+    private String pad(String value, int width, HorizontalAlign align) {
+        switch (align) {
+        case LEFT:
+            return " " + StringUtils.rightPad(value, width) + " ";
+        case RIGHT:
+            return " " + StringUtils.leftPad(value, width) + " ";
+        case CENTER:
+            return StringUtils.center(value, width + 2);
+        default:
+            return StringUtils.center(value, width + 2);
+        }
+    }
+
     private String textRow(List<? extends Object> row, List<Integer> maxWidths, List<HorizontalAlign> hAligns) {
         StringBuilder result = new StringBuilder();
         List<List<String>> splits = row.stream()
@@ -19,7 +32,7 @@ class TextTableRender implements TableRenderInterface {
             .collect(Collectors.toList());
         int maxLines = splits.stream().map(c -> c.size()).max(Integer::compare).get();
         for (int idx = 0; idx < maxLines; idx++) {
-            List<String> line = new ArrayList<>();
+            List<String> line = new ArrayList<String>();
             for (List<String> column : splits) {
                 line.add(idx < column.size() ? column.get(idx) : "");
             }
@@ -32,19 +45,7 @@ class TextTableRender implements TableRenderInterface {
         StringBuilder result = new StringBuilder();
         result.append("|");
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
-            String cValue = row.get(cIdx);
-            Integer cWidth = maxWidths.get(cIdx);
-            switch (hAligns.get(cIdx)) {
-            case LEFT:
-                result.append(" " + StringUtils.rightPad(cValue, cWidth) + " ");
-                break;
-            case RIGHT:
-                result.append(" " + StringUtils.leftPad(cValue, cWidth) + " ");
-                break;
-            case CENTER:
-                result.append(StringUtils.center(cValue, cWidth + 2));
-                break;
-            }
+            result.append(this.pad(row.get(cIdx), maxWidths.get(cIdx), hAligns.get(cIdx)));
             result.append("|");
         }
         result.append("\n");
