@@ -20,6 +20,7 @@
     <!-- JUnit versions -->
     <version.jupiter.junit>5.14.1</version.jupiter.junit>
     <version.plugin.jacoco>0.8.14</version.plugin.jacoco>
+    <version.plugin.jacoco-console-reporter>1.3.2</version.plugin.jacoco-console-reporter>
 
     <!-- Checkstyle -->
     <version.plugin.checkstyle>3.6.0</version.plugin.checkstyle>
@@ -90,6 +91,16 @@
                 </goals>
             </execution>
         </executions>
+      </plugin>
+      <!-- Print JaCoCo coverage in the console -->
+      <plugin>
+        <groupId>io.github.svaningelgem</groupId>
+        <artifactId>jacoco-console-reporter</artifactId>
+        <version>${version.plugin.jacoco-console-reporter}</version>
+        <configuration>
+          <showFiles>true</showFiles>
+          <showMissingLines>true</showMissingLines>
+        </configuration>
       </plugin>
       <!-- Dependency plugin -->
       <plugin>
