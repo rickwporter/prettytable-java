@@ -373,4 +373,109 @@ public class PrettyTableTest {
         big.setOutputFormat(OutputFormat.JSON);
         Assertions.assertEquals(expected, big.toString());
     }
+
+    @Test
+    public void testOptionDefaults() {
+        PrettyTable table = new PrettyTable("Column");
+        Assertions.assertTrue(table.isShowHeader());
+        Assertions.assertTrue(table.isShowLines());
+        Assertions.assertTrue(table.isRemoveRedundant());
+        Assertions.assertNull(table.getCaption());
+    }
+
+    @Test
+    public void testShowHeaderOption() {
+        PrettyTable table = new PrettyTable("LongHeader", "H");
+        table.addRow("ab", "wider-cell");
+        table.addRow("cdef\ngh", "z");
+
+        Assertions.assertEquals(10, table.getMaxWidthForColumn(0));
+        Assertions.assertEquals(10, table.getMaxWidthForColumn(1));
+        Assertions.assertEquals(10, table.getMaxWidths().get(0).intValue());
+        Assertions.assertEquals(10, table.getMaxWidths().get(1).intValue());
+
+        table.setShowHeader(false);
+        Assertions.assertFalse(table.isShowHeader());
+        // header text no longer contributes; multiline cells still do
+        Assertions.assertEquals(4, table.getMaxWidthForColumn(0));
+        Assertions.assertEquals(10, table.getMaxWidthForColumn(1));
+
+        table.setShowHeader(true);
+        Assertions.assertTrue(table.isShowHeader());
+        Assertions.assertEquals(10, table.getMaxWidthForColumn(0));
+
+        PrettyTable empty = new PrettyTable("Header");
+        Assertions.assertEquals(6, empty.getMaxWidthForColumn(0));
+        empty.setShowHeader(false);
+        Assertions.assertEquals(0, empty.getMaxWidthForColumn(0));
+
+        // a column past the header list is sized from the cell either way
+        PrettyTable extra = new PrettyTable("Only");
+        extra.addRow("x", "second");
+        Assertions.assertEquals(6, extra.getMaxWidthForColumn(1));
+        extra.setShowHeader(false);
+        Assertions.assertEquals(1, extra.getMaxWidthForColumn(0));
+        Assertions.assertEquals(6, extra.getMaxWidthForColumn(1));
+    }
+
+    @Test
+    public void testShowLinesAndCaptionOptions() {
+        PrettyTable table = new PrettyTable("A");
+
+        table.setShowLines(false);
+        Assertions.assertFalse(table.isShowLines());
+        table.setShowLines(true);
+        Assertions.assertTrue(table.isShowLines());
+
+        table.setCaption("Summary");
+        Assertions.assertEquals("Summary", table.getCaption());
+        table.setCaption("");
+        Assertions.assertEquals("", table.getCaption());
+        table.setCaption(null);
+        Assertions.assertNull(table.getCaption());
+    }
+
+    @Test
+    public void testRemoveRedundantOption() {
+        PrettyTable table = new PrettyTable("Col1", "Col2", "Col3", "Col4");
+        table.addRow("A", "B", "C", "D");
+        table.addRow("A", "B", "C", "Z");
+        table.addRow("A", "B", "F", "E");
+        table.addRow("A", "B", "F", "E");
+
+        String dedupedText = loadFileContent("PrettyTable_duplicate.text");
+        String dedupedHtml = loadFileContent("PrettyTable_duplicate.html");
+        String fullText = loadFileContent("PrettyTable_duplicate_undup.text");
+        String fullHtml = loadFileContent("PrettyTable_duplicate_undup.html");
+
+        Assertions.assertTrue(table.isRemoveRedundant());
+        Assertions.assertEquals(dedupedText, table.formattedString(OutputFormat.TEXT));
+        Assertions.assertEquals(dedupedHtml, table.formattedString(OutputFormat.HTML));
+        Assertions.assertEquals(dedupedText, table.toString());
+
+        table.setRemoveRedundant(false);
+        Assertions.assertFalse(table.isRemoveRedundant());
+        Assertions.assertEquals(fullText, table.formattedString(OutputFormat.TEXT));
+        Assertions.assertEquals(fullHtml, table.formattedString(OutputFormat.HTML));
+        Assertions.assertEquals(fullText, table.toString());
+
+        table.setOutputFormat(OutputFormat.HTML);
+        Assertions.assertEquals(fullHtml, table.toString());
+
+        // the explicit flag still overrides the option
+        Assertions.assertEquals(dedupedText, table.formattedString(OutputFormat.TEXT, true));
+        Assertions.assertEquals(dedupedHtml, table.formattedString(OutputFormat.HTML, true));
+        table.setRemoveRedundant(true);
+        Assertions.assertEquals(fullText, table.formattedString(OutputFormat.TEXT, false));
+        Assertions.assertEquals(fullHtml, table.toHtml(false));
+
+        // CSV and JSON keep every value either way
+        String csv = loadFileContent("PrettyTable_duplicate.csv");
+        String json = loadFileContent("PrettyTable_duplicate.json");
+        Assertions.assertEquals(csv, table.formattedString(OutputFormat.CSV));
+        Assertions.assertEquals(json, table.formattedString(OutputFormat.JSON));
+        table.setRemoveRedundant(false);
+        Assertions.assertEquals(csv, table.formattedString(OutputFormat.CSV));
+        Assertions.assertEquals(json, table.formattedString(OutputFormat.JSON));
+    }
 }
