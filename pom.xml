@@ -19,7 +19,7 @@
 
     <!-- JUnit versions -->
     <version.jupiter.junit>5.14.1</version.jupiter.junit>
-    <version.plugin.jacoco>0.8.14</version.plugin.jacoco>
+    <version.plugin.jacoco>0.8.16</version.plugin.jacoco>
     <version.plugin.jacoco-console-reporter>1.3.2</version.plugin.jacoco-console-reporter>
 
     <!-- Checkstyle -->
