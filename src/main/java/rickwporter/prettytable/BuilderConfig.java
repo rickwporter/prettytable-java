@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public final class PrettyObjectConfig {
+public final class BuilderConfig {
     static final int DEFAULT_KEY_MAX_LEN = 35;
     static final int DEFAULT_VALUE_MAX_LEN = 50;
     static final int DEFAULT_URL_MAX_LEN = 100;
@@ -30,7 +30,7 @@ public final class PrettyObjectConfig {
         return this.itemsLabel;
     }
 
-    public PrettyObjectConfig setItemsLabel(String label) {
+    public BuilderConfig setItemsLabel(String label) {
         this.itemsLabel = Objects.requireNonNull(label);
         return this;
     }
@@ -39,7 +39,7 @@ public final class PrettyObjectConfig {
         return this.propertyLabel;
     }
 
-    public PrettyObjectConfig setPropertyLabel(String label) {
+    public BuilderConfig setPropertyLabel(String label) {
         this.propertyLabel = Objects.requireNonNull(label);
         return this;
     }
@@ -48,7 +48,7 @@ public final class PrettyObjectConfig {
         return this.propertiesLabel;
     }
 
-    public PrettyObjectConfig setPropertiesLabel(String label) {
+    public BuilderConfig setPropertiesLabel(String label) {
         this.propertiesLabel = Objects.requireNonNull(label);
         return this;
     }
@@ -57,7 +57,7 @@ public final class PrettyObjectConfig {
         return this.valueLabel;
     }
 
-    public PrettyObjectConfig setValueLabel(String label) {
+    public BuilderConfig setValueLabel(String label) {
         this.valueLabel = Objects.requireNonNull(label);
         return this;
     }
@@ -66,7 +66,7 @@ public final class PrettyObjectConfig {
         return this.valuesLabel;
     }
 
-    public PrettyObjectConfig setValuesLabel(String label) {
+    public BuilderConfig setValuesLabel(String label) {
         this.valuesLabel = Objects.requireNonNull(label);
         return this;
     }
@@ -75,7 +75,7 @@ public final class PrettyObjectConfig {
         return this.unknownLabel;
     }
 
-    public PrettyObjectConfig setUnknownLabel(String label) {
+    public BuilderConfig setUnknownLabel(String label) {
         this.unknownLabel = Objects.requireNonNull(label);
         return this;
     }
@@ -84,7 +84,7 @@ public final class PrettyObjectConfig {
         return this.itemsCaption;
     }
 
-    public PrettyObjectConfig setItemsCaption(String template) {
+    public BuilderConfig setItemsCaption(String template) {
         this.itemsCaption = Objects.requireNonNull(template);
         return this;
     }
@@ -93,7 +93,7 @@ public final class PrettyObjectConfig {
         return this.ellipsis;
     }
 
-    public PrettyObjectConfig setEllipsis(String marker) {
+    public BuilderConfig setEllipsis(String marker) {
         this.ellipsis = Objects.requireNonNull(marker);
         return this;
     }
@@ -102,7 +102,7 @@ public final class PrettyObjectConfig {
         return this.wildcardHeader;
     }
 
-    public PrettyObjectConfig setWildcardHeader(String header) {
+    public BuilderConfig setWildcardHeader(String header) {
         this.wildcardHeader = Objects.requireNonNull(header);
         return this;
     }
@@ -111,7 +111,7 @@ public final class PrettyObjectConfig {
         return this.urlPrefixes;
     }
 
-    public PrettyObjectConfig setUrlPrefixes(List<String> prefixes) {
+    public BuilderConfig setUrlPrefixes(List<String> prefixes) {
         this.urlPrefixes = new ArrayList<String>(Objects.requireNonNull(prefixes));
         return this;
     }
@@ -120,7 +120,7 @@ public final class PrettyObjectConfig {
         return this.urlMaxLen;
     }
 
-    public PrettyObjectConfig setUrlMaxLen(int maxLen) {
+    public BuilderConfig setUrlMaxLen(int maxLen) {
         this.urlMaxLen = maxLen;
         return this;
     }
@@ -129,7 +129,7 @@ public final class PrettyObjectConfig {
         return this.keyFields;
     }
 
-    public PrettyObjectConfig setKeyFields(List<String> fields) {
+    public BuilderConfig setKeyFields(List<String> fields) {
         this.keyFields = new ArrayList<String>(Objects.requireNonNull(fields));
         return this;
     }
@@ -138,7 +138,7 @@ public final class PrettyObjectConfig {
         return this.keyMaxLen;
     }
 
-    public PrettyObjectConfig setKeyMaxLen(int maxLen) {
+    public BuilderConfig setKeyMaxLen(int maxLen) {
         this.keyMaxLen = maxLen;
         return this;
     }
@@ -147,7 +147,7 @@ public final class PrettyObjectConfig {
         return this.valueMaxLen;
     }
 
-    public PrettyObjectConfig setValueMaxLen(int maxLen) {
+    public BuilderConfig setValueMaxLen(int maxLen) {
         this.valueMaxLen = maxLen;
         return this;
     }
@@ -156,7 +156,7 @@ public final class PrettyObjectConfig {
         return this.columns;
     }
 
-    public PrettyObjectConfig setColumns(List<String> columnNames) {
+    public BuilderConfig setColumns(List<String> columnNames) {
         if (columnNames == null) {
             this.columns = null;
             return this;

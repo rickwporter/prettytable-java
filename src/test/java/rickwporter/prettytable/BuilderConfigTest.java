@@ -7,10 +7,10 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PrettyObjectConfigTest {
+public class BuilderConfigTest {
     @Test
     public void testDefaults() {
-        PrettyObjectConfig config = new PrettyObjectConfig();
+        BuilderConfig config = new BuilderConfig();
         Assertions.assertEquals("Items", config.getItemsLabel());
         Assertions.assertEquals("Property", config.getPropertyLabel());
         Assertions.assertEquals("Properties", config.getPropertiesLabel());
@@ -30,7 +30,7 @@ public class PrettyObjectConfigTest {
 
     @Test
     public void testSetters() {
-        PrettyObjectConfig config = new PrettyObjectConfig();
+        BuilderConfig config = new BuilderConfig();
 
         Assertions.assertSame(config, config.setItemsLabel("mickey"));
         Assertions.assertEquals("mickey", config.getItemsLabel());
@@ -92,7 +92,7 @@ public class PrettyObjectConfigTest {
 
     @Test
     public void testSettersRejectNull() {
-        PrettyObjectConfig config = new PrettyObjectConfig();
+        BuilderConfig config = new BuilderConfig();
 
         Assertions.assertThrows(NullPointerException.class, () -> config.setItemsLabel(null));
         Assertions.assertEquals("Items", config.getItemsLabel());

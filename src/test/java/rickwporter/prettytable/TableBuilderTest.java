@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PrettyObjectTest {
+public class TableBuilderTest {
     private static final String LONG_KEY = "really looooooooooooooooooonnnng key value";
     private static final String LONG_URL =
             "https://typer.tiangolo.com/virtual-environments/#install-packages-directly";
@@ -111,60 +111,60 @@ public class PrettyObjectTest {
         this.assertRendered(filename, data, null);
     }
 
-    private void assertRendered(String filename, Object data, PrettyObjectConfig options) {
+    private void assertRendered(String filename, Object data, BuilderConfig options) {
         String expected = this.loadFileContent(filename);
-        String actual = new PrettyObject(options).build(data).toString();
+        String actual = new TableBuilder(options).build(data).toString();
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     public void testHeaderize() {
-        PrettyObject obj = new PrettyObject();
+        TableBuilder obj = new TableBuilder();
         Assertions.assertEquals("Properties", obj.headerize("*"));
         Assertions.assertEquals("", obj.headerize(""));
         Assertions.assertEquals("Hello", obj.headerize("hello"));
 
-        PrettyObject custom = new PrettyObject(new PrettyObjectConfig().setWildcardHeader("Rest"));
+        TableBuilder custom = new TableBuilder(new BuilderConfig().setWildcardHeader("Rest"));
         Assertions.assertEquals("Rest", custom.headerize("*"));
         Assertions.assertEquals("Hello", custom.headerize("hello"));
     }
 
     @Test 
     public void testStringify() {
-        Assertions.assertEquals("None", PrettyObject.stringify(null));
-        Assertions.assertEquals("True", PrettyObject.stringify(true));
-        Assertions.assertEquals("False", PrettyObject.stringify(false));
-        Assertions.assertEquals("My string", PrettyObject.stringify("My string"));
-        Assertions.assertEquals("3", PrettyObject.stringify(3));
+        Assertions.assertEquals("None", TableBuilder.stringify(null));
+        Assertions.assertEquals("True", TableBuilder.stringify(true));
+        Assertions.assertEquals("False", TableBuilder.stringify(false));
+        Assertions.assertEquals("My string", TableBuilder.stringify("My string"));
+        Assertions.assertEquals("3", TableBuilder.stringify(3));
     }
 
     @Test
     public void testTruncate() {
-        PrettyObject obj = new PrettyObject();
+        TableBuilder obj = new TableBuilder();
         Assertions.assertEquals("This is it", obj.truncate("This is it", 10));
         Assertions.assertEquals("This...", obj.truncate("This is it", 7));
         // corner case with nothing
         Assertions.assertEquals("...", obj.truncate("This is it", 2));
 
-        PrettyObject custom = new PrettyObject(new PrettyObjectConfig().setEllipsis("~"));
+        TableBuilder custom = new TableBuilder(new BuilderConfig().setEllipsis("~"));
         Assertions.assertEquals("This i~", custom.truncate("This is it", 7));
         Assertions.assertEquals("~", custom.truncate("This is it", 0));
     }
 
     @Test 
     public void testFormatCaption() {
-        Assertions.assertEquals("Found 23 items", PrettyObject.formatCaption("Found {} items", 23));
-        Assertions.assertEquals("Found 99 items", PrettyObject.formatCaption("Found %d items", 99));
-        Assertions.assertEquals("Found 12 items", PrettyObject.formatCaption("Found %s items", 12));
+        Assertions.assertEquals("Found 23 items", TableBuilder.formatCaption("Found {} items", 23));
+        Assertions.assertEquals("Found 99 items", TableBuilder.formatCaption("Found %d items", 99));
+        Assertions.assertEquals("Found 12 items", TableBuilder.formatCaption("Found %s items", 12));
 
         // odd behaviors (may want to change)
-        Assertions.assertEquals("Found 23 23 items", PrettyObject.formatCaption("Found {} {} items", 23));
+        Assertions.assertEquals("Found 23 23 items", TableBuilder.formatCaption("Found {} {} items", 23));
     }
 
     @Test
     public void testSimpleDict() {
-        PrettyTable table = new PrettyObject().build(this.simpleDict());
-        this.assertRendered("PrettyObject_simple_dict.text", this.simpleDict());
+        PrettyTable table = new TableBuilder().build(this.simpleDict());
+        this.assertRendered("TableBuilder_simple_dict.text", this.simpleDict());
         Assertions.assertTrue(table.isShowHeader());
         Assertions.assertTrue(table.isShowLines());
         Assertions.assertFalse(table.isRemoveRedundant());
@@ -184,8 +184,8 @@ public class PrettyObjectTest {
 
     @Test
     public void testSummaryList() {
-        PrettyTable table = new PrettyObject().build(this.summaryList());
-        this.assertRendered("PrettyObject_summary.text", this.summaryList());
+        PrettyTable table = new TableBuilder().build(this.summaryList());
+        this.assertRendered("TableBuilder_summary.text", this.summaryList());
         Assertions.assertEquals(Arrays.asList("Name", "Data"), table.getHeaders());
         Assertions.assertTrue(table.isShowLines());
         Assertions.assertEquals("Found 3 items", table.getCaption());
@@ -198,8 +198,8 @@ public class PrettyObjectTest {
 
     @Test
     public void testInnerList() {
-        PrettyTable table = new PrettyObject().build(this.innerList());
-        this.assertRendered("PrettyObject_inner.text", this.innerList());
+        PrettyTable table = new TableBuilder().build(this.innerList());
+        this.assertRendered("TableBuilder_inner.text", this.innerList());
         PrettyTable inner = (PrettyTable) table.getCell(1, 1);
         Assertions.assertFalse(inner.isShowHeader());
         Assertions.assertEquals(4, inner.getRowCount());
@@ -213,7 +213,7 @@ public class PrettyObjectTest {
 
     @Test
     public void testReadmeList() {
-        this.assertRendered("PrettyObject_readme.text", this.readmeList());
+        this.assertRendered("TableBuilder_readme.text", this.readmeList());
     }
 
     @Test
@@ -221,13 +221,13 @@ public class PrettyObjectTest {
         List<Object> items = new ArrayList<Object>();
         items.add(this.simpleDict());
         items.add(mapOf("foo", "bar"));
-        this.assertRendered("PrettyObject_nameless.text", items);
+        this.assertRendered("TableBuilder_nameless.text", items);
     }
 
     @Test
     public void testSimpleList() {
-        this.assertRendered("PrettyObject_simple_list.text", this.simpleList());
-        PrettyTable table = new PrettyObject().build(this.simpleList());
+        this.assertRendered("TableBuilder_simple_list.text", this.simpleList());
+        PrettyTable table = new TableBuilder().build(this.simpleList());
         Assertions.assertEquals(Arrays.asList("Items"), table.getHeaders());
         Assertions.assertEquals("Found 6 items", table.getCaption());
         Assertions.assertEquals("False", table.getCell(3, 0));
@@ -236,8 +236,8 @@ public class PrettyObjectTest {
 
     @Test
     public void testTruncated() {
-        PrettyTable table = new PrettyObject().build(this.longValues());
-        this.assertRendered("PrettyObject_truncated.text", this.longValues());
+        PrettyTable table = new TableBuilder().build(this.longValues());
+        this.assertRendered("TableBuilder_truncated.text", this.longValues());
         Assertions.assertEquals("mid-url", table.getCell(0, 0));
         Assertions.assertEquals(LONG_URL, table.getCell(0, 1));
         Assertions.assertEquals("really looooooooooooooooooonnnng...", table.getCell(1, 0));
@@ -252,71 +252,71 @@ public class PrettyObjectTest {
 
     @Test
     public void testConfigTruncated() {
-        PrettyObjectConfig options = new PrettyObjectConfig()
+        BuilderConfig options = new BuilderConfig()
                 .setUrlMaxLen(16)
                 .setValueMaxLen(20)
                 .setKeyMaxLen(4);
-        this.assertRendered("PrettyObject_config_trunc.text", this.longValues(), options);
+        this.assertRendered("TableBuilder_config_trunc.text", this.longValues(), options);
     }
 
     @Test
     public void testConfigLabels() {
-        PrettyObjectConfig options = new PrettyObjectConfig()
+        BuilderConfig options = new BuilderConfig()
                 .setUrlMaxLen(16)
                 .setValueMaxLen(50)
                 .setKeyMaxLen(100)
                 .setUrlPrefixes(Arrays.asList("https://"))
                 .setPropertyLabel("foo")
                 .setValueLabel("bar");
-        this.assertRendered("PrettyObject_config_labels.text", this.longValues(), options);
+        this.assertRendered("TableBuilder_config_labels.text", this.longValues(), options);
     }
 
     @Test
     public void testConfigInnerList() {
-        PrettyObjectConfig options = new PrettyObjectConfig()
+        BuilderConfig options = new BuilderConfig()
                 .setKeyFields(Arrays.asList("ghi"))
                 .setPropertiesLabel("Different");
-        this.assertRendered("PrettyObject_config_inner.text", this.innerList(), options);
+        this.assertRendered("TableBuilder_config_inner.text", this.innerList(), options);
     }
 
     @Test
     public void testColumns() {
-        this.assertRendered("PrettyObject_columns.text", this.columnList(),
-                new PrettyObjectConfig().setColumns(Arrays.asList("service", "name")));
-        this.assertRendered("PrettyObject_columns_wild.text", this.columnList(),
-                new PrettyObjectConfig().setColumns(Arrays.asList("service", "*", "id")));
-        this.assertRendered("PrettyObject_columns_missing.text", this.columnList(),
-                new PrettyObjectConfig().setColumns(Arrays.asList("id", "missing", "name")));
+        this.assertRendered("TableBuilder_columns.text", this.columnList(),
+                new BuilderConfig().setColumns(Arrays.asList("service", "name")));
+        this.assertRendered("TableBuilder_columns_wild.text", this.columnList(),
+                new BuilderConfig().setColumns(Arrays.asList("service", "*", "id")));
+        this.assertRendered("TableBuilder_columns_missing.text", this.columnList(),
+                new BuilderConfig().setColumns(Arrays.asList("id", "missing", "name")));
     }
 
     @Test
     public void testEmptyColumnsUsesDefaultList() {
         List<Object> items = new ArrayList<Object>();
         items.add(mapOf("name", "a", "x", 1, "y", 2));
-        PrettyTable table = new PrettyObject(new PrettyObjectConfig().setColumns(new ArrayList<String>())).build(items);
+        PrettyTable table = new TableBuilder(new BuilderConfig().setColumns(new ArrayList<String>())).build(items);
         Assertions.assertEquals(Arrays.asList("Name", "Properties"), table.getHeaders());
     }
 
     @Test
     public void testEmptyListValue() {
-        PrettyTable table = new PrettyObject().build(mapOf("items", new ArrayList<Object>()));
+        PrettyTable table = new TableBuilder().build(mapOf("items", new ArrayList<Object>()));
         Assertions.assertEquals("items", table.getCell(0, 0));
         Assertions.assertEquals("[]", table.getCell(0, 1));
     }
 
     @Test
     public void testCaptionWrap() {
-        PrettyObjectConfig options = new PrettyObjectConfig()
+        BuilderConfig options = new BuilderConfig()
                 .setItemsLabel("Simple stuff")
                 .setItemsCaption("Got {} simple things");
-        this.assertRendered("PrettyObject_caption.text", this.simpleList(), options);
+        this.assertRendered("TableBuilder_caption.text", this.simpleList(), options);
     }
 
     @Test
     public void testCaptionLong() {
-        PrettyObjectConfig options = new PrettyObjectConfig()
+        BuilderConfig options = new BuilderConfig()
                 .setItemsCaption("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        this.assertRendered("PrettyObject_caption_long.text", Arrays.asList("a"), options);
+        this.assertRendered("TableBuilder_caption_long.text", Arrays.asList("a"), options);
     }
 
     @Test
@@ -324,8 +324,8 @@ public class PrettyObjectTest {
         List<Object> items = new ArrayList<Object>();
         items.add(mapOf("name", "a", "value", 1));
         items.add(mapOf("name", "a", "value", 2));
-        PrettyTable table = new PrettyObject().build(items);
-        this.assertRendered("PrettyObject_repeated.text", items);
+        PrettyTable table = new TableBuilder().build(items);
+        this.assertRendered("TableBuilder_repeated.text", items);
         Assertions.assertEquals("a", table.getCell(0, 0));
         Assertions.assertEquals("a", table.getCell(1, 0));
     }
@@ -335,16 +335,16 @@ public class PrettyObjectTest {
         List<Object> items = new ArrayList<Object>();
         items.add(mapOf("id", 10, "role", "x"));
         items.add(mapOf("id", 11, "role", "y"));
-        PrettyTable table = new PrettyObject().build(items);
-        this.assertRendered("PrettyObject_by_id.text", items);
+        PrettyTable table = new TableBuilder().build(items);
+        this.assertRendered("TableBuilder_by_id.text", items);
         Assertions.assertEquals(Arrays.asList("Id", "Role"), table.getHeaders());
     }
 
     @Test
     public void testNothingFound() {
-        Assertions.assertNull(new PrettyObject().build(null));
-        Assertions.assertNull(new PrettyObject().build(new LinkedHashMap<String, Object>()));
-        Assertions.assertNull(new PrettyObject().build(new ArrayList<Object>()));
+        Assertions.assertNull(new TableBuilder().build(null));
+        Assertions.assertNull(new TableBuilder().build(new LinkedHashMap<String, Object>()));
+        Assertions.assertNull(new TableBuilder().build(new ArrayList<Object>()));
     }
 
     @Test
@@ -352,7 +352,7 @@ public class PrettyObjectTest {
         Map<Object, Object> item = mapOf("name", "sna", "a", 1, "b", 2);
         List<Object> data = new ArrayList<Object>();
         data.add(item);
-        new PrettyObject().build(data);
+        new TableBuilder().build(data);
         Assertions.assertEquals(3, item.size());
         Assertions.assertEquals("sna", item.get("name"));
         Assertions.assertEquals(1, item.get("a"));
@@ -360,31 +360,31 @@ public class PrettyObjectTest {
 
     @Test
     public void testColumnsIgnoredForMap() {
-        PrettyObjectConfig options = new PrettyObjectConfig()
+        BuilderConfig options = new BuilderConfig()
                 .setColumns(Arrays.asList("abc"));
-        this.assertRendered("PrettyObject_simple_dict.text", this.simpleDict(), options);
+        this.assertRendered("TableBuilder_simple_dict.text", this.simpleDict(), options);
     }
 
     @Test
     public void testNullConfigUsesDefaults() {
-        this.assertRendered("PrettyObject_simple_dict.text", this.simpleDict(), null);
+        this.assertRendered("TableBuilder_simple_dict.text", this.simpleDict(), null);
     }
 
     @Test
     public void testUnknownLabel() {
-        PrettyObjectConfig options = new PrettyObjectConfig()
+        BuilderConfig options = new BuilderConfig()
                 .setUnknownLabel("Anonymous");
-        String rendered = new PrettyObject(options).build(this.innerList()).toString();
+        String rendered = new TableBuilder(options).build(this.innerList()).toString();
         Assertions.assertTrue(rendered.contains("Anonymous"));
         Assertions.assertFalse(rendered.contains("Unknown"));
     }
 
     @Test
     public void testWildcardIgnoresPropertiesLabel() {
-        PrettyObjectConfig options = new PrettyObjectConfig()
+        BuilderConfig options = new BuilderConfig()
                 .setPropertiesLabel("Different")
                 .setColumns(Arrays.asList("service", "*", "id"));
-        String rendered = new PrettyObject(options).build(this.columnList()).toString();
+        String rendered = new TableBuilder(options).build(this.columnList()).toString();
         Assertions.assertTrue(rendered.contains("Properties"));
         Assertions.assertFalse(rendered.contains("Different"));
     }
@@ -392,12 +392,12 @@ public class PrettyObjectTest {
     @Test
     public void testUnsupportedType() {
         IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new PrettyObject().build(new Object());
+            new TableBuilder().build(new Object());
         });
         Assertions.assertEquals("Unable to create table for type Object", ex.getMessage());
 
         ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            new PrettyObject().build(Arrays.asList(new Object()));
+            new TableBuilder().build(Arrays.asList(new Object()));
         });
         Assertions.assertEquals("Unable to create table for type list", ex.getMessage());
 
@@ -405,7 +405,7 @@ public class PrettyObjectTest {
             List<Object> items = new ArrayList<Object>();
             items.add(mapOf("name", "a"));
             items.add("nope");
-            new PrettyObject().build(items);
+            new TableBuilder().build(items);
         });
         Assertions.assertEquals("Unable to create table for type list", ex.getMessage());
     }

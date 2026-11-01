@@ -10,18 +10,18 @@ import java.util.Set;
 
 import rickwporter.prettytable.PrettyTable.HorizontalAlign;
 
-public final class PrettyObject {
+public final class TableBuilder {
     private static final String WILDCARD_COLUMN = "*";
     private static final Object MANY_KEYS = new Object();
 
-    private final PrettyObjectConfig config;
+    private final BuilderConfig config;
 
-    public PrettyObject() {
+    public TableBuilder() {
         this(null);
     }
 
-    public PrettyObject(PrettyObjectConfig options) {
-        this.config = options == null ? new PrettyObjectConfig() : options;
+    public TableBuilder(BuilderConfig options) {
+        this.config = options == null ? new BuilderConfig() : options;
     }
 
     public PrettyTable build(Object data) {
