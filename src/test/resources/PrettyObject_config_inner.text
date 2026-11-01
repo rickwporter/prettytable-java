@@ -1,0 +1,13 @@
++----------+-----------------------+
+| Property | Value                 |
++----------+-----------------------+
+| prop 1   | simple                |
+| prOp B   |  True     name  sna   |
+|          |           abc   def   |
+|          |  None     name  foo   |
+|          |           abc   def   |
+|          |  1.2345   name  bar   |
+|          |           abc   def   |
+|          |  blah     abc  def    |
+| Prop III | None                  |
++----------+-----------------------+

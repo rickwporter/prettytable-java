@@ -1,0 +1,14 @@
++----------+--------------------------+
+| Property | Value                    |
++----------+--------------------------+
+| prop 1   | simple                   |
+| prOp B   |  sna       abc  def      |
+|          |            ghi  True     |
+|          |  foo       abc  def      |
+|          |            ghi  None     |
+|          |  bar       abc  def      |
+|          |            ghi  1.2345   |
+|          |  Unknown   abc  def      |
+|          |            ghi  blah     |
+| Prop III | None                     |
++----------+--------------------------+
