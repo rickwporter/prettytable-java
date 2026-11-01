@@ -3,6 +3,7 @@ package rickwporter.prettytable;
 import org.junit.jupiter.api.Test;
 
 import rickwporter.prettytable.PrettyTable.HorizontalAlign;
+import rickwporter.prettytable.PrettyTable.OutputFormat;
 
 import org.junit.jupiter.api.Assertions;
 
@@ -147,6 +148,162 @@ public class TextTableRenderTest {
         Assertions.assertEquals(""
             + " Ada  36 \n"
             + " Bob  7  \n", render(table));
+    }
+
+    @Test
+    public void testRowDividers() {
+        PrettyTable table = nameAgeTable();
+        Assertions.assertFalse(table.isRowDividers());
+        Assertions.assertEquals(borderedNameAge(), render(table, false));
+
+        table.setRowDividers(true);
+        Assertions.assertTrue(table.isRowDividers());
+        // repeated cells are kept here, so each data row closes with a rule
+        Assertions.assertEquals(dividedNameAge(), render(table, false));
+        table.setRemoveRedundant(false);
+        Assertions.assertEquals(dividedNameAge(), table.toString());
+
+        table.setHorizAligns(HorizontalAlign.LEFT, HorizontalAlign.RIGHT);
+        Assertions.assertEquals(""
+            + "+------+-----+\n"
+            + "| Name | Age |\n"
+            + "+------+-----+\n"
+            + "| Ada  |  36 |\n"
+            + "+------+-----+\n"
+            + "| Bob  |   7 |\n"
+            + "+------+-----+\n", render(table, false));
+
+        // one rule follows the whole wrapped row
+        PrettyTable wrapped = new PrettyTable("A", "B");
+        wrapped.setRowDividers(true);
+        wrapped.setRemoveRedundant(false);
+        wrapped.addRow("a\nbb", "c");
+        wrapped.addRow("d", "ee");
+        Assertions.assertEquals(""
+            + "+----+----+\n"
+            + "| A  | B  |\n"
+            + "+----+----+\n"
+            + "| a  | c  |\n"
+            + "| bb |    |\n"
+            + "+----+----+\n"
+            + "| d  | ee |\n"
+            + "+----+----+\n", render(wrapped, false));
+
+        table.setHorizAligns(HorizontalAlign.CENTER, HorizontalAlign.CENTER);
+        table.setShowHeader(false);
+        Assertions.assertEquals(""
+            + "+-----+----+\n"
+            + "| Ada | 36 |\n"
+            + "+-----+----+\n"
+            + "| Bob | 7  |\n"
+            + "+-----+----+\n", render(table, false));
+
+        PrettyTable noHeaders = new PrettyTable();
+        noHeaders.setRowDividers(true);
+        noHeaders.addRow("Ada", 36);
+        noHeaders.addRow("Bob", 7);
+        Assertions.assertEquals(""
+            + "+-----+----+\n"
+            + "| Ada | 36 |\n"
+            + "+-----+----+\n"
+            + "| Bob | 7  |\n"
+            + "+-----+----+\n", render(noHeaders, false));
+
+        // an empty table keeps the rule under the header and skips the extra closing rule
+        PrettyTable empty = new PrettyTable("Name", "Age");
+        empty.setRowDividers(true);
+        Assertions.assertEquals(""
+            + "+------+-----+\n"
+            + "| Name | Age |\n"
+            + "+------+-----+\n", render(empty, false));
+
+        empty.setShowHeader(false);
+        Assertions.assertEquals(""
+            + "+--+--+\n", render(empty, false));
+
+        table.setShowHeader(true);
+        table.setShowLines(false);
+        Assertions.assertEquals(""
+            + " Name  Age \n"
+            + " Ada   36  \n"
+            + " Bob    7  \n", render(table, false));
+
+        table.setShowLines(true);
+        table.setCaption("Friends");
+        Assertions.assertEquals(dividedNameAge() + "Friends\n", render(table, false));
+        Assertions.assertEquals(dividedNameAge() + "Friends\n", table.toString());
+
+        table.setRowDividers(false);
+        Assertions.assertFalse(table.isRowDividers());
+        Assertions.assertEquals(borderedNameAge() + "Friends\n", table.toString());
+    }
+
+    @Test
+    public void testRowDividersAndRedundant() {
+        PrettyTable table = new PrettyTable("Col1", "Col2", "Col3", "Col4");
+        table.addRow("A", "B", "C", "D");
+        table.addRow("A", "B", "C", "Z");
+        table.addRow("A", "B", "F", "E");
+        table.addRow("A", "B", "F", "E");
+        table.setRowDividers(true);
+
+        // a shared leading prefix suppresses the rule under that row
+        String deduped = ""
+            + "+------+------+------+------+\n"
+            + "| Col1 | Col2 | Col3 | Col4 |\n"
+            + "+------+------+------+------+\n"
+            + "|  A   |  B   |  C   |  D   |\n"
+            + "+------+------+------+------+\n"
+            + "|      |      |      |  Z   |\n"
+            + "|      |      |  F   |  E   |\n"
+            + "|      |      |      |      |\n";
+        Assertions.assertEquals(deduped, render(table, true));
+        Assertions.assertEquals(deduped, table.toString());
+        Assertions.assertEquals(deduped, table.formattedString(OutputFormat.TEXT, true));
+
+        String everyRow = ""
+            + "+------+------+------+------+\n"
+            + "| Col1 | Col2 | Col3 | Col4 |\n"
+            + "+------+------+------+------+\n"
+            + "|  A   |  B   |  C   |  D   |\n"
+            + "+------+------+------+------+\n"
+            + "|  A   |  B   |  C   |  Z   |\n"
+            + "+------+------+------+------+\n"
+            + "|  A   |  B   |  F   |  E   |\n"
+            + "+------+------+------+------+\n"
+            + "|  A   |  B   |  F   |  E   |\n"
+            + "+------+------+------+------+\n";
+        Assertions.assertEquals(everyRow, render(table, false));
+        Assertions.assertEquals(everyRow, table.formattedString(OutputFormat.TEXT, false));
+        table.setRemoveRedundant(false);
+        Assertions.assertEquals(everyRow, table.toString());
+
+        // a repeated leading cell drops the rule; a changed leading cell keeps it
+        PrettyTable names = new PrettyTable("Name", "Age");
+        names.setRowDividers(true);
+        names.addRow("Ada", 36);
+        names.addRow("Ada", 36);
+        names.addRow("Bob", 7);
+        Assertions.assertEquals(""
+            + "+------+-----+\n"
+            + "| Name | Age |\n"
+            + "+------+-----+\n"
+            + "| Ada  | 36  |\n"
+            + "+------+-----+\n"
+            + "|      |     |\n"
+            + "| Bob  |  7  |\n"
+            + "+------+-----+\n", render(names, true));
+    }
+
+    private String dividedNameAge() {
+        return ""
+            + "+------+-----+\n"
+            + "| Name | Age |\n"
+            + "+------+-----+\n"
+            + "| Ada  | 36  |\n"
+            + "+------+-----+\n"
+            + "| Bob  |  7  |\n"
+            + "+------+-----+\n";
     }
 
     private PrettyTable nameAgeTable() {

@@ -138,7 +138,7 @@ The **html** output will have the appropriate `style="text-align:xxx"` attribute
 ```
 
 ### Text options
-ASCII **text** output can hide the header row, drop the border, and print a caption under the table. **csv**, **html**, and **json** ignore these three settings.
+ASCII **text** output can hide the header row, drop the border, draw a rule under data rows, and print a caption under the table. **csv**, **html**, and **json** ignore these settings.
 
 `PrettyTable::setShowHeader(false)` omits the header. Column widths then come only from the data cells, so the columns can get narrower. A table built with no headers already skips that row.
 
@@ -166,6 +166,68 @@ The **text** output then looks like this:
      A          B          c      
      1         1024      65535    
  Washington   Adams    Jefferson  
+```
+
+`PrettyTable::setRowDividers(true)` draws a `+---+` rule under data rows. `setShowLines(false)` hides those rules with the rest of the border.
+
+The sample rows do not repeat a leading cell, so each data row has a rule under it. The rule under the last row closes the table.
+
+```Java
+      table.setRowDividers(true);
+```
+
+```
++------------+----------+------------+
+|  Column A  | Column 2 | Column III |
++------------+----------+------------+
+|     A      |    B     |     c      |
++------------+----------+------------+
+|     1      |   1024   |   65535    |
++------------+----------+------------+
+| Washington |  Adams   | Jefferson  |
++------------+----------+------------+
+```
+
+When repeated leading cells are removed, a row that shares a leading prefix with the row above has no rule under it.
+
+```Java
+      PrettyTable grouped = new PrettyTable("Col1", "Col2", "Col3", "Col4");
+      grouped.addRow("A", "B", "C", "D");
+      grouped.addRow("A", "B", "C", "Z");
+      grouped.addRow("A", "B", "F", "E");
+      grouped.addRow("A", "B", "F", "E");
+      grouped.setRowDividers(true);
+```
+
+```
++------+------+------+------+
+| Col1 | Col2 | Col3 | Col4 |
++------+------+------+------+
+|  A   |  B   |  C   |  D   |
+|      |      |      |  Z   |
+|      |      |  F   |  E   |
+|      |      |      |      |
++------+------+------+------+
+```
+
+`setRemoveRedundant(false)` keeps a rule under every data row:
+
+```Java
+      grouped.setRemoveRedundant(false);
+```
+
+```
++------+------+------+------+
+| Col1 | Col2 | Col3 | Col4 |
++------+------+------+------+
+|  A   |  B   |  C   |  D   |
++------+------+------+------+
+|  A   |  B   |  C   |  Z   |
++------+------+------+------+
+|  A   |  B   |  F   |  E   |
++------+------+------+------+
+|  A   |  B   |  F   |  E   |
++------+------+------+------+
 ```
 
 `PrettyTable::setCaption(String)` prints a caption under the table. A `null` or empty caption is skipped. Newlines in the caption are kept, and a caption longer than the table is printed unchanged.

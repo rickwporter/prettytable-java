@@ -38,6 +38,7 @@ public final class PrettyTable {
     private OutputFormat defaultOutput = OutputFormat.TEXT;
     private boolean showHeader = true;
     private boolean showLines = true;
+    private boolean rowDividers = false;
     private boolean omitRedundant = true;
     private String caption = null;
 
@@ -118,6 +119,14 @@ public final class PrettyTable {
 
     public boolean isShowLines() {
         return this.showLines;
+    }
+
+    public void setRowDividers(boolean visible) {
+        this.rowDividers = visible;
+    }
+
+    public boolean isRowDividers() {
+        return this.rowDividers;
     }
 
     public void setRemoveRedundant(boolean remove) {
