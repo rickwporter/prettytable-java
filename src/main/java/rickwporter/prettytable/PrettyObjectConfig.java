@@ -17,6 +17,8 @@ public final class PrettyObjectConfig {
     private String valuesLabel = "Values";
     private String unknownLabel = "Unknown";
     private String itemsCaption = "Found {} items";
+    private String ellipsis = "...";
+    private String wildcardHeader = "Properties";
     private List<String> urlPrefixes = new ArrayList<String>(Arrays.asList("http://", "https://", "ftp://"));
     private int urlMaxLen = DEFAULT_URL_MAX_LEN;
     private List<String> keyFields = new ArrayList<String>(Arrays.asList("name", "id"));
@@ -84,6 +86,24 @@ public final class PrettyObjectConfig {
 
     public PrettyObjectConfig setItemsCaption(String template) {
         this.itemsCaption = Objects.requireNonNull(template);
+        return this;
+    }
+
+    public String getEllipsis() {
+        return this.ellipsis;
+    }
+
+    public PrettyObjectConfig setEllipsis(String marker) {
+        this.ellipsis = Objects.requireNonNull(marker);
+        return this;
+    }
+
+    public String getWildcardHeader() {
+        return this.wildcardHeader;
+    }
+
+    public PrettyObjectConfig setWildcardHeader(String header) {
+        this.wildcardHeader = Objects.requireNonNull(header);
         return this;
     }
 

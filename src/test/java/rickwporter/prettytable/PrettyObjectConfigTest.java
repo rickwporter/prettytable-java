@@ -18,6 +18,8 @@ public class PrettyObjectConfigTest {
         Assertions.assertEquals("Values", config.getValuesLabel());
         Assertions.assertEquals("Unknown", config.getUnknownLabel());
         Assertions.assertEquals("Found {} items", config.getItemsCaption());
+        Assertions.assertEquals("...", config.getEllipsis());
+        Assertions.assertEquals("Properties", config.getWildcardHeader());
         Assertions.assertEquals(Arrays.asList("http://", "https://", "ftp://"), config.getUrlPrefixes());
         Assertions.assertEquals(100, config.getUrlMaxLen());
         Assertions.assertEquals(Arrays.asList("name", "id"), config.getKeyFields());
@@ -50,6 +52,12 @@ public class PrettyObjectConfigTest {
 
         Assertions.assertSame(config, config.setItemsCaption("huey, dewey, louie"));
         Assertions.assertEquals("huey, dewey, louie", config.getItemsCaption());
+
+        Assertions.assertSame(config, config.setEllipsis("~"));
+        Assertions.assertEquals("~", config.getEllipsis());
+
+        Assertions.assertSame(config, config.setWildcardHeader("Rest"));
+        Assertions.assertEquals("Rest", config.getWildcardHeader());
 
         List<String> prefixes = new ArrayList<String>(Arrays.asList("ftp://"));
         Assertions.assertSame(config, config.setUrlPrefixes(prefixes));
@@ -106,6 +114,12 @@ public class PrettyObjectConfigTest {
 
         Assertions.assertThrows(NullPointerException.class, () -> config.setItemsCaption(null));
         Assertions.assertEquals("Found {} items", config.getItemsCaption());
+
+        Assertions.assertThrows(NullPointerException.class, () -> config.setEllipsis(null));
+        Assertions.assertEquals("...", config.getEllipsis());
+
+        Assertions.assertThrows(NullPointerException.class, () -> config.setWildcardHeader(null));
+        Assertions.assertEquals("Properties", config.getWildcardHeader());
 
         Assertions.assertThrows(NullPointerException.class, () -> config.setUrlPrefixes(null));
         Assertions.assertEquals(Arrays.asList("http://", "https://", "ftp://"), config.getUrlPrefixes());
