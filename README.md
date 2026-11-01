@@ -36,7 +36,7 @@ import rickwporter.prettytable.PrettyTable.OutputFormat;
       System.out.println(table.formattedString(OutputFormat.TEXT));
 ```
 
-You can use `PrettyTable::toString()` as an alternative to using the `PrettyTable::formattedString()`. If you want a format other than **text**, you can set it with `PrettyTable::setOutputFormat()`. There is no `toString()` equivalent to say whether the remove the redundant entries (for **text** and **html**). The code below would replace the `println()` call from above:
+You can use `PrettyTable::toString()` as an alternative to `PrettyTable::formattedString()`. If you want a format other than **text**, you can set it with `PrettyTable::setOutputFormat()`. Repeated leading cells in **text** and **html** follow `PrettyTable::setRemoveRedundant()`, which removes them by default. The code below would replace the `println()` call from above:
 ```Java
       table.setOutputFormat(OutputFormat.HTML);
       System.out.println(table.toString());
@@ -137,8 +137,56 @@ The **html** output will have the appropriate `style="text-align:xxx"` attribute
     </tr>
 ```
 
- ### Deduplication
- Both ASCII **text** and **html** formats remove redundancy by defaults. This de-duplication generally makes the output more aesthetically pleasing, as demonstrated below.
+### Text options
+ASCII **text** output can hide the header row, drop the border, and print a caption under the table. **csv**, **html**, and **json** ignore these three settings.
+
+`PrettyTable::setShowHeader(false)` omits the header. Column widths then come only from the data cells, so the columns can get narrower. A table built with no headers already skips that row.
+
+```Java
+      table.setShowHeader(false);
+```
+
+The **text** output then looks like this:
+```
++------------+-------+-----------+
+|     A      |   B   |     c     |
+|     1      | 1024  |   65535   |
+| Washington | Adams | Jefferson |
++------------+-------+-----------+
+```
+
+`PrettyTable::setShowLines(false)` omits the `+---+` rules and the `|` borders. Each cell keeps its padding, and column alignment still applies.
+
+```Java
+      table.setShowLines(false);
+```
+
+```
+  Column A   Column 2  Column III 
+     A          B          c      
+     1         1024      65535    
+ Washington   Adams    Jefferson  
+```
+
+`PrettyTable::setCaption(String)` prints a caption under the table. A `null` or empty caption is skipped. Newlines in the caption are kept, and a caption longer than the table is printed unchanged.
+
+```Java
+      table.setCaption("US presidents");
+```
+
+```
++------------+----------+------------+
+|  Column A  | Column 2 | Column III |
++------------+----------+------------+
+|     A      |    B     |     c      |
+|     1      |   1024   |   65535    |
+| Washington |  Adams   | Jefferson  |
++------------+----------+------------+
+US presidents
+```
+
+### Deduplication
+Both ASCII **text** and **html** formats remove redundancy by default. This de-duplication generally makes the output more aesthetically pleasing, as demonstrated below.
 
  A table created like this:
  ```Java
@@ -159,13 +207,17 @@ The **html** output will have the appropriate `style="text-align:xxx"` attribute
 |      |      |  F   |  E   |
 +------+------+------+------+
  ```
- By default, the code recognizes the redundant fields and removes them from the rendering of the data. However, you can print the full table using the `formatString()` method that allows specifying not to de-duplicate the data.
- 
- In this case, using this code:
- ```Java
-    System.out.println(table.formattedString(OutputFormat.TEXT, false));
- ```
- produces output that looks like:
+By default, the code recognizes the redundant fields and removes them from the rendering of the data. `PrettyTable::setRemoveRedundant(false)` keeps every repeated value for `toString()` and for `formattedString(OutputFormat)`. One call can still override that setting with `formattedString(OutputFormat, boolean)`. **csv** and **json** keep every cell either way.
+
+In this case, either of these calls:
+```Java
+   table.setRemoveRedundant(false);
+   System.out.println(table.toString());
+```
+```Java
+   System.out.println(table.formattedString(OutputFormat.TEXT, false));
+```
+produces output that looks like:
  ```
  +------+------+------+------+
 | Col1 | Col2 | Col3 | Col4 |
