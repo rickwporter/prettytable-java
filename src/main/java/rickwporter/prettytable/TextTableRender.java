@@ -28,7 +28,8 @@ class TextTableRender implements TableRenderInterface {
         }
     }
 
-    private String textRow(List<? extends Object> row, List<Integer> maxWidths, List<HorizontalAlign> hAligns) {
+    private String textRow(List<? extends Object> row, List<Integer> maxWidths, List<HorizontalAlign> hAligns,
+        boolean showLines) {
         StringBuilder result = new StringBuilder();
         List<List<String>> splits = row.stream()
             .map(c -> Arrays.asList(NEWLINE.split(c.toString())))
@@ -39,23 +40,40 @@ class TextTableRender implements TableRenderInterface {
             for (List<String> column : splits) {
                 line.add(idx < column.size() ? column.get(idx) : "");
             }
-            result.append(this.textRowLine(line, maxWidths, hAligns));
+            result.append(this.textRowLine(line, maxWidths, hAligns, showLines));
         }
         return result.toString();
     }
 
-    private String textRowLine(List<String> row, List<Integer> maxWidths, List<HorizontalAlign> hAligns) {
+    private String textRowLine(List<String> row, List<Integer> maxWidths, List<HorizontalAlign> hAligns,
+        boolean showLines) {
         StringBuilder result = new StringBuilder();
-        result.append("|");
+        if (showLines) {
+            result.append("|");
+        }
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
             result.append(this.pad(row.get(cIdx), maxWidths.get(cIdx), hAligns.get(cIdx)));
-            result.append("|");
+            if (showLines) {
+                result.append("|");
+            }
         }
         result.append("\n");
         return result.toString();
     }
 
-    private String textRule(List<Integer> maxWidths, Integer maxColumns) {
+    // Caption is drawn under the table
+    private String textCaption(String caption) {
+        if (caption == null || caption.isEmpty()) {
+            return "";
+        }
+        return caption + "\n";
+    }
+
+    private String textRule(List<Integer> maxWidths, Integer maxColumns, boolean showLines) {
+        if (!showLines) {
+            return "";
+        }
+
         StringBuilder result = new StringBuilder();
         result.append("+");
         for (int i = 0; i < maxColumns; i++) {
@@ -73,16 +91,17 @@ class TextTableRender implements TableRenderInterface {
         List<Integer> maxWidths = table.getMaxWidths();
         StringBuilder result = new StringBuilder();
         Integer maxColumns = table.getMaxColumns();
+        boolean showLines = table.isShowLines();
         List<HorizontalAlign> hAligns = new ArrayList<>(table.getHorizAligns());
         for (int i = hAligns.size(); i <= maxColumns; i++) {
             hAligns.add(table.getDefaultHorizAlign());
         }
 
-        if (!table.getHeaders().isEmpty()) {
-            result.append(textRule(maxWidths, maxColumns));
-            result.append(textRow(table.getHeaders(), maxWidths, hAligns));
+        if (table.isShowHeader() && !table.getHeaders().isEmpty()) {
+            result.append(textRule(maxWidths, maxColumns, showLines));
+            result.append(textRow(table.getHeaders(), maxWidths, hAligns, showLines));
         }
-        result.append(textRule(maxWidths, maxColumns));
+        result.append(textRule(maxWidths, maxColumns, showLines));
         List<String> lastRow = new ArrayList<>();
         for (List<Object> row : table.getRows()) {
             List<String> currentRow = row.stream().map(c -> c.toString()).collect(Collectors.toList());
@@ -96,9 +115,11 @@ class TextTableRender implements TableRenderInterface {
                 }
                 lastRow = fullRow;
             }
-            result.append(textRow(currentRow, maxWidths, hAligns));
+            result.append(textRow(currentRow, maxWidths, hAligns, showLines));
         }
-        result.append(textRule(maxWidths, maxColumns));
+        result.append(textRule(maxWidths, maxColumns, showLines));
+        result.append(textCaption(table.getCaption()));
+
         return result.toString();
     }
 }

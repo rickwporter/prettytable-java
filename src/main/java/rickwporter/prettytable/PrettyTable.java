@@ -36,6 +36,10 @@ public final class PrettyTable {
     private List<HorizontalAlign> hAligns = new ArrayList<>();
     private HorizontalAlign defaultHorizontal = HorizontalAlign.CENTER;
     private OutputFormat defaultOutput = OutputFormat.TEXT;
+    private boolean showHeader = true;
+    private boolean showLines = true;
+    private boolean omitRedundant = true;
+    private String caption = null;
 
     public PrettyTable(String... hdrs) {
         this.headers.addAll(Arrays.asList(hdrs));
@@ -100,8 +104,43 @@ public final class PrettyTable {
         return this.defaultOutput;
     }
 
+    public void setShowHeader(boolean visible) {
+        this.showHeader = visible;
+    }
+
+    public boolean isShowHeader() {
+        return this.showHeader;
+    }
+
+    public void setShowLines(boolean visible) {
+        this.showLines = visible;
+    }
+
+    public boolean isShowLines() {
+        return this.showLines;
+    }
+
+    public void setRemoveRedundant(boolean remove) {
+        this.omitRedundant = remove;
+    }
+
+    public boolean isRemoveRedundant() {
+        return this.omitRedundant;
+    }
+
+    public void setCaption(String value) {
+        this.caption = value;
+    }
+
+    public String getCaption() {
+        return this.caption;
+    }
+
     public int getMaxWidthForColumn(int column) {
-        int maxWidth = column >= this.headers.size() ? 0 : this.headers.get(column).length();
+        int maxWidth = 0;
+        if (this.showHeader && column < this.headers.size()) {
+            maxWidth = this.headers.get(column).length();
+        }
         for (List<Object> row : this.rows) {
             String cellText = row.get(column).toString();
             List<String> cellLines = Arrays.asList(NEWLINE.split(cellText));
@@ -176,7 +215,7 @@ public final class PrettyTable {
     }
 
     public String formattedString(OutputFormat format) {
-        return this.formattedString(format, true);
+        return this.formattedString(format, this.omitRedundant);
     }
 
     public String formattedString(OutputFormat format, boolean removeRedundant) {
