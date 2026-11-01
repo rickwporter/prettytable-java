@@ -379,6 +379,7 @@ public class PrettyTableTest {
         PrettyTable table = new PrettyTable("Column");
         Assertions.assertTrue(table.isShowHeader());
         Assertions.assertTrue(table.isShowLines());
+        Assertions.assertFalse(table.isRowDividers());
         Assertions.assertTrue(table.isRemoveRedundant());
         Assertions.assertNull(table.getCaption());
     }
@@ -433,6 +434,59 @@ public class PrettyTableTest {
         Assertions.assertEquals("", table.getCaption());
         table.setCaption(null);
         Assertions.assertNull(table.getCaption());
+    }
+
+    @Test
+    public void testRowDividersOption() {
+        PrettyTable table = createBasicTable();
+        Assertions.assertFalse(table.isRowDividers());
+
+        table.setRowDividers(true);
+        Assertions.assertTrue(table.isRowDividers());
+        // these rows do not share a leading cell, so each one has a rule under it
+        String everyRow = ""
+            + "+------------+----------+------------+\n"
+            + "|  Column A  | Column 2 | Column III |\n"
+            + "+------------+----------+------------+\n"
+            + "|     A      |    B     |     c      |\n"
+            + "+------------+----------+------------+\n"
+            + "|     1      |   1024   |   65535    |\n"
+            + "+------------+----------+------------+\n"
+            + "| Washington |  Adams   | Jefferson  |\n"
+            + "+------------+----------+------------+\n";
+        Assertions.assertEquals(everyRow, table.formattedString(OutputFormat.TEXT));
+        Assertions.assertEquals(everyRow, table.toString());
+
+        table.setRemoveRedundant(false);
+        Assertions.assertEquals(everyRow, table.formattedString(OutputFormat.TEXT));
+        Assertions.assertEquals(everyRow, table.toString());
+        Assertions.assertEquals(everyRow, table.formattedString(OutputFormat.TEXT, true));
+
+        // need showLines to have dividers show up
+        String lineless = ""
+            + "  Column A   Column 2  Column III \n"
+            + "     A          B          c      \n"
+            + "     1         1024      65535    \n"
+            + " Washington   Adams    Jefferson  \n";
+        table.setShowLines(false);
+        Assertions.assertEquals(lineless, table.formattedString(OutputFormat.TEXT));
+        Assertions.assertEquals(lineless, table.toString());
+        Assertions.assertEquals(lineless, table.formattedString(OutputFormat.TEXT, true));
+        table.setShowLines(true);
+
+        // csv, html, and json ignore the setting
+        Assertions.assertEquals(loadFileContent("PrettyTable_basic.csv"), table.formattedString(OutputFormat.CSV));
+        Assertions.assertEquals(loadFileContent("PrettyTable_basic.html"), table.formattedString(OutputFormat.HTML));
+        Assertions.assertEquals(loadFileContent("PrettyTable_basic.json"), table.formattedString(OutputFormat.JSON));
+        table.setOutputFormat(OutputFormat.HTML);
+        Assertions.assertEquals(loadFileContent("PrettyTable_basic.html"), table.toString());
+
+        table.setRowDividers(false);
+        Assertions.assertFalse(table.isRowDividers());
+        table.setOutputFormat(OutputFormat.TEXT);
+        table.setRemoveRedundant(true);
+        Assertions.assertEquals(loadFileContent("PrettyTable_basic.text"), table.toString());
+
     }
 
     @Test

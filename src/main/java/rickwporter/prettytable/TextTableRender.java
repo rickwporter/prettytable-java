@@ -92,6 +92,7 @@ class TextTableRender implements TableRenderInterface {
         StringBuilder result = new StringBuilder();
         Integer maxColumns = table.getMaxColumns();
         boolean showLines = table.isShowLines();
+        boolean rowDividers = table.isRowDividers() && showLines;
         List<HorizontalAlign> hAligns = new ArrayList<>(table.getHorizAligns());
         for (int i = hAligns.size(); i <= maxColumns; i++) {
             hAligns.add(table.getDefaultHorizAlign());
@@ -106,18 +107,21 @@ class TextTableRender implements TableRenderInterface {
         for (List<Object> row : table.getRows()) {
             List<String> currentRow = row.stream().map(c -> c.toString()).collect(Collectors.toList());
             List<String> fullRow = new ArrayList<String>(currentRow);  // make a copy before manipulating
+            boolean divider = true;
             if (removeRedundant) {
                 for (int i = 0; i < lastRow.size(); i++) {
                     if (!lastRow.get(i).equals(currentRow.get(i))) {
                         break;
                     }
                     currentRow.set(i, "");
+                    divider = false;
                 }
                 lastRow = fullRow;
             }
             result.append(textRow(currentRow, maxWidths, hAligns, showLines));
+            result.append(textRule(maxWidths, maxColumns, rowDividers && divider));
         }
-        result.append(textRule(maxWidths, maxColumns, showLines));
+        result.append(textRule(maxWidths, maxColumns, showLines && !rowDividers));
         result.append(textCaption(table.getCaption()));
 
         return result.toString();
