@@ -89,3 +89,4 @@ jobs:
           token: ${{ steps.badge-token.outputs.token }}
           message: 'Update code coverage badges'
           add: '.github/badges/*.svg'
+          branch: 'main'
