@@ -228,20 +228,17 @@ public final class PrettyTable {
     }
 
     public String formattedString(OutputFormat format, boolean removeRedundant) {
-        TableRenderInterface renderer = null;
-        switch (format) {
-        case TEXT:
+        final TableRenderInterface renderer;
+        if (format == OutputFormat.TEXT) {
             renderer = new TextTableRender();
-            break;
-        case CSV:
+        } else if (format == OutputFormat.CSV) {
             renderer = new CsvTableRender();
-            break;
-        case JSON:
+        } else if (format == OutputFormat.JSON) {
             renderer = new JsonTableRender();
-            break;
-        case HTML:
+        } else if (format == OutputFormat.HTML) {
             renderer = new HtmlTableRender();
-            break;
+        } else {
+            throw new IllegalArgumentException("Unsupported OutputFormat: " + format);
         }
         return render(renderer, removeRedundant);
     }

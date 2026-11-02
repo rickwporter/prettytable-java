@@ -13,17 +13,13 @@ class TextTableRender implements TableRenderInterface {
     private static final Pattern NEWLINE = Pattern.compile("\\R");
 
     String pad(String value, int width, HorizontalAlign align) {
-        if (align == null) {
-            throw new IllegalArgumentException("Unsupported HorizontalAlignment: " + align);
-        }
-        switch (align) {
-        case LEFT:
+        if (align == HorizontalAlign.LEFT) {
             return " " + StringUtils.rightPad(value, width) + " ";
-        case RIGHT:
+        } else if (align == HorizontalAlign.RIGHT) {
             return " " + StringUtils.leftPad(value, width) + " ";
-        case CENTER:
+        } else if (align == HorizontalAlign.CENTER) {
             return StringUtils.center(value, width + 2);
-        default:
+        } else {
             throw new IllegalArgumentException("Unsupported HorizontalAlignment: " + align);
         }
     }
