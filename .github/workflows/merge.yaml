@@ -12,12 +12,12 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '.github/badges/**'
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -56,3 +56,36 @@ jobs:
       with:
         name: jacoco-report
         path: target/site/jacoco/
+
+  badges:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create badge app token
+        id: badge-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.BADGE_APP_ID }}
+          private-key: ${{ secrets.BADGE_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          token: ${{ steps.badge-token.outputs.token }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco
+
+      - uses: cicirello/jacoco-badge-generator@v2
+        with:
+          generate-branches-badge: true
+          jacoco-csv-file: target/site/jacoco/jacoco.csv
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          token: ${{ steps.badge-token.outputs.token }}
+          message: 'Update code coverage badges'
+          add: '.github/badges/*.svg'
