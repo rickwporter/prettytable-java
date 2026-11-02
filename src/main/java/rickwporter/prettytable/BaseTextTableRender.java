@@ -96,7 +96,7 @@ abstract class BaseTextTableRender implements TableRenderInterface {
     }
 
     // Caption is drawn under the table.
-    final String textCaption(String caption) {
+    final String caption(String caption) {
         if (caption == null || caption.isEmpty()) {
             return "";
         }

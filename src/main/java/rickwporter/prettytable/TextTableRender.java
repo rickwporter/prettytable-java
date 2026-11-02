@@ -36,7 +36,7 @@ class TextTableRender extends BaseTextTableRender {
             result.append(this.rule(RULE, maxWidths, rowDividers && divider));
         }
         result.append(this.rule(RULE, maxWidths, showLines && !rowDividers));
-        result.append(this.textCaption(table.getCaption()));
+        result.append(this.caption(table.getCaption()));
 
         return result.toString();
     }
