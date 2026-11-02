@@ -22,7 +22,9 @@ Here's an example of the standard **text** output:
 +------------+----------+------------+
 ```
 
-## Usage
+The `PrettyTable` class handles a table as shown above. The `TableBuilder` class can be used to turn a `Map` or `List` object into a `PrettyTable`.
+
+## PrettyTable Usage
 Here are the basics for how to create a `PrettyTable` as shown above:
 ```Java
 import rickwporter.prettytable.PrettyTable;
@@ -306,6 +308,68 @@ The sorting looks like this:
 ```
 
 **NOTE:** specifying an out of range index, or a header that is not found will result in a `ArrayIndexOutOfBoundsException`!
+
+## TableBuilder Usage
+`TableBuilder` builds a `PrettyTable` from a `Map` or a `List`. The constructor takes an optional `BuilderConfig`. The data is passed to `build`, which returns the table. `build` returns `null` for `null` or an empty map or list, and throws `IllegalArgumentException` for any other type.
+
+A map becomes a Property / Value table. Nested maps become nested tables, and a list of plain values is joined into one cell. `null` renders as `None`. Booleans render as `True` and `False`.
+
+A list of strings, numbers, or booleans becomes one Items column with a caption such as `Found 6 items`. A list of maps uses the first matching key field (`name`, then `id`) as the row name. One other field becomes the second column. Further fields are nested under Properties. Long keys, values, and URLs are cut off with `...`.
+
+```Java
+import rickwporter.prettytable.TableBuilder;
+
+      List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+      Map<String, Object> sna = new LinkedHashMap<String, Object>();
+      sna.put("name", "sna");
+      sna.put("prop1", 1);
+      sna.put("prop B", null);
+      sna.put("blah", "zay");
+      items.add(sna);
+
+      PrettyTable table = new TableBuilder().build(items);
+      System.out.println(table);
+```
+
+```
++------+----------------+
+| Name | Properties     |
++------+----------------+
+| sna  |  prop1   1     |
+|      |  prop B  None  |
+|      |  blah    zay   |
++------+----------------+
+Found 1 items
+```
+
+### BuilderConfig
+`BuilderConfig` holds the labels, caption, truncation limits, and column selection used by `build`. Each setter returns the config, so calls can be chained. A `null` config uses the defaults.
+
+The caption template replaces `{}`, `%d`, or `%s` with the number of items. `setColumns` chooses columns for a list of maps. A `*` column collects every field that is not named, under the wildcard header (`Properties` by default). An empty column list leaves the default layout in place.
+
+```Java
+import rickwporter.prettytable.BuilderConfig;
+
+      BuilderConfig config = new BuilderConfig()
+              .setColumns(Arrays.asList("service", "*", "id"))
+              .setKeyMaxLen(20)
+              .setEllipsis("...");
+      PrettyTable table = new TableBuilder(config).build(items);
+```
+
+| Setting | Default |
+| --- | --- |
+| `setItemsLabel` | `Items` |
+| `setPropertyLabel` / `setValueLabel` | `Property` / `Value` |
+| `setPropertiesLabel` / `setValuesLabel` | `Properties` / `Values` |
+| `setUnknownLabel` | `Unknown` |
+| `setItemsCaption` | `Found {} items` |
+| `setEllipsis` | `...` |
+| `setWildcardHeader` | `Properties` |
+| `setKeyFields` | `name`, `id` |
+| `setKeyMaxLen` / `setValueMaxLen` / `setUrlMaxLen` | 35 / 50 / 100 |
+| `setUrlPrefixes` | `http://`, `https://`, `ftp://` |
+| `setColumns` | `null` |
 
 ## Development
 
