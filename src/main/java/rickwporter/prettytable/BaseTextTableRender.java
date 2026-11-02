@@ -40,7 +40,7 @@ abstract class BaseTextTableRender implements TableRenderInterface {
     }
 
     final String textRow(List<? extends Object> row, List<Integer> maxWidths, List<HorizontalAlign> hAligns,
-            String glyphs) {
+            TableGlyphs glyphs) {
         StringBuilder result = new StringBuilder();
         List<List<String>> splits = row.stream()
             .map(c -> Arrays.asList(NEWLINE.split(c.toString())))
@@ -57,40 +57,40 @@ abstract class BaseTextTableRender implements TableRenderInterface {
     }
 
     private String textRowLine(List<String> row, List<Integer> maxWidths, List<HorizontalAlign> hAligns,
-            String glyphs) {
+            TableGlyphs glyphs) {
         StringBuilder result = new StringBuilder();
         if (glyphs != null) {
-            result.append(glyphs.charAt(0));
+            result.append(glyphs.left());
         }
         for (int cIdx = 0; cIdx < row.size(); cIdx++) {
             if (glyphs != null && cIdx > 0) {
-                result.append(glyphs.charAt(2));
+                result.append(glyphs.junction());
             }
             result.append(this.pad(row.get(cIdx), maxWidths.get(cIdx), hAligns.get(cIdx)));
         }
         if (glyphs != null) {
-            result.append(glyphs.charAt(glyphs.length() - 1));
+            result.append(glyphs.right());
         }
         result.append("\n");
         return result.toString();
     }
 
-    final String rule(String glyphs, List<Integer> maxWidths, boolean visible) {
+    final String rule(TableGlyphs glyphs, List<Integer> maxWidths, boolean visible) {
         if (!visible) {
             return "";
         }
         StringBuilder result = new StringBuilder();
-        result.append(glyphs.charAt(0));
+        result.append(glyphs.left());
         for (int i = 0; i < maxWidths.size(); i++) {
             if (i > 0) {
-                result.append(glyphs.charAt(2));
+                result.append(glyphs.junction());
             }
             int span = maxWidths.get(i) + 2;
             for (int j = 0; j < span; j++) {
-                result.append(glyphs.charAt(1));
+                result.append(glyphs.fill());
             }
         }
-        result.append(glyphs.charAt(glyphs.length() - 1));
+        result.append(glyphs.right());
         result.append("\n");
         return result.toString();
     }

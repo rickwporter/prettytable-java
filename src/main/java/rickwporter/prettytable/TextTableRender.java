@@ -6,8 +6,8 @@ import java.util.List;
 import rickwporter.prettytable.PrettyTable.HorizontalAlign;
 
 class TextTableRender extends BaseTextTableRender {
-    private static final String RULE = "+-++";
-    private static final String VERTICAL = "| ||";
+    private static final TableGlyphs RULE = new TableGlyphs('+', '-', '+', '+');
+    private static final TableGlyphs VERTICAL = new TableGlyphs('|', ' ', '|', '|');
 
     @Override
     public String render(PrettyTable table, boolean removeRedundant) {
@@ -16,7 +16,7 @@ class TextTableRender extends BaseTextTableRender {
         boolean showLines = table.isShowLines();
         boolean rowDividers = table.isRowDividers() && showLines;
         List<HorizontalAlign> hAligns = this.alignments(table);
-        String vertical = showLines ? VERTICAL : null;
+        TableGlyphs vertical = showLines ? VERTICAL : null;
 
         if (table.isShowHeader() && !table.getHeaders().isEmpty()) {
             result.append(this.rule(RULE, maxWidths, showLines));
