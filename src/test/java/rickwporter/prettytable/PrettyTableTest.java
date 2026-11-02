@@ -532,4 +532,14 @@ public class PrettyTableTest {
         Assertions.assertEquals(csv, table.formattedString(OutputFormat.CSV));
         Assertions.assertEquals(json, table.formattedString(OutputFormat.JSON));
     }
+
+    @Test
+    public void testUnknownOutputFormat() {
+        PrettyTable table = new PrettyTable("A");
+        IllegalArgumentException ex = Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> table.formattedString(null, false)
+        );
+        Assertions.assertEquals("Unsupported OutputFormat: null", ex.getMessage());
+    }
 }
