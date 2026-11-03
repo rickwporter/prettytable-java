@@ -7,6 +7,7 @@ Display data in a tabular form with Java
 
 The data can be output in several different different forms:
 * **text** - attractive ASCII format
+* **rich** - Unicode box drawing
 * **csv** - comma separated values format
 * **html** - HyperText Markup Language (HTML) format
 * **json** - JavaScript Object Notation (JSON) format
@@ -38,7 +39,7 @@ import rickwporter.prettytable.PrettyTable.OutputFormat;
       System.out.println(table.formattedString(OutputFormat.TEXT));
 ```
 
-You can use `PrettyTable::toString()` as an alternative to `PrettyTable::formattedString()`. If you want a format other than **text**, you can set it with `PrettyTable::setOutputFormat()`. Repeated leading cells in **text** and **html** follow `PrettyTable::setRemoveRedundant()`, which removes them by default. The code below would replace the `println()` call from above:
+You can use `PrettyTable::toString()` as an alternative to `PrettyTable::formattedString()`. If you want a format other than **text**, you can set it with `PrettyTable::setOutputFormat()`. Repeated leading cells in **text**, **rich**, and **html** follow `PrettyTable::setRemoveRedundant()`, which removes them by default. The code below would replace the `println()` call from above:
 ```Java
       table.setOutputFormat(OutputFormat.HTML);
       System.out.println(table.toString());
@@ -85,6 +86,22 @@ Using the **html** format (e.g. `OutputFormat.HTML`), you get the following outp
 </table>
 ```
 
+Using the **rich** format (e.g. `OutputFormat.RICH`), you more aesthetically please lines for the table. The header (if shown) gets a heavier weight border.  The header, border, row-divider, alignment, and deduplication settings are the same as **text**. Hiding the border (`setShowLines(false)`) leaves padded text, so a nested table stays borderless.
+
+```Java
+      System.out.println(table.formattedString(OutputFormat.RICH));
+```
+
+```
+┏━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃  Column A  ┃ Column 2 ┃ Column III ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━┩
+│     A      │    B     │     c      │
+│     1      │   1024   │   65535    │
+│ Washington │  Adams   │ Jefferson  │
+└────────────┴──────────┴────────────┘
+```
+
 Using the **json** format (e.g. `OutputFormat.JSON`), you get the following output:
 ```
 [
@@ -112,7 +129,7 @@ Using the **json** format (e.g. `OutputFormat.JSON`), you get the following outp
 ```
 
 ### Alignment
-Both ASCII **text** and **html** formats support different alignments. Here's how you would update the above table:
+ASCII **text**, **rich**, and **html** support different alignments. Here's how you would update the above table:
 ```Java
 import rickwporter.prettytable.PrettyTable.HorizontalAlign;
 
@@ -140,7 +157,7 @@ The **html** output will have the appropriate `style="text-align:xxx"` attribute
 ```
 
 ### Text options
-ASCII **text** output can hide the header row, drop the border, draw a rule under data rows, and print a caption under the table. **csv**, **html**, and **json** ignore these settings.
+ASCII **text** and **rich** output can hide the header row, drop the border, draw a rule under data rows, and print a caption under the table. **csv**, **html**, and **json** ignore these settings. A `null` or empty caption is skipped. Any other caption is printed unchanged.
 
 `PrettyTable::setShowHeader(false)` omits the header. Column widths then come only from the data cells, so the columns can get narrower. A table built with no headers already skips that row.
 
@@ -250,7 +267,7 @@ US presidents
 ```
 
 ### Deduplication
-Both ASCII **text** and **html** formats remove redundancy by default. This de-duplication generally makes the output more aesthetically pleasing, as demonstrated below.
+ASCII **text**, **rich**, and **html** remove redundancy by default. This de-duplication generally makes the output more aesthetically pleasing, as demonstrated below.
 
  A table created like this:
  ```Java
@@ -341,6 +358,8 @@ import rickwporter.prettytable.TableBuilder;
 +------+----------------+
 Found 1 items
 ```
+
+`table.setOutputFormat(OutputFormat.RICH)` prints effectively the same table with prettier lines/borders.
 
 ### BuilderConfig
 `BuilderConfig` holds the labels, caption, truncation limits, and column selection used by `build`. Each setter returns the config, so calls can be chained. A `null` config uses the defaults.

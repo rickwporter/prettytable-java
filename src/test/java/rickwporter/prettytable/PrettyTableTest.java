@@ -16,6 +16,8 @@ import java.util.Map;
 public class PrettyTableTest {
     Map<OutputFormat, String> OUTPUT_FORMAT_EXTENSIONS = new HashMap<OutputFormat, String>() {{
         put(OutputFormat.TEXT, "text");
+        // NOTE: this is a little hacky, but named rich text as `txt` to distinguish from plain/ascii text
+        put(OutputFormat.RICH, "txt");
         put(OutputFormat.CSV, "csv");
         put(OutputFormat.HTML, "html");
         put(OutputFormat.JSON, "json");
@@ -113,11 +115,29 @@ public class PrettyTableTest {
     }
 
     @Test
+    public void testBasicRich() {
+        PrettyTable table = createBasicTable();
+        String result = table.toRich(true);
+        String expected = loadFileContent("PrettyTable_basic.txt");
+        Assertions.assertEquals(expected, result);
+        // same answer when going through 'formattedString()'
+        result = table.formattedString(OutputFormat.RICH);
+        Assertions.assertEquals(expected, result);
+        // same answer in this case because there are no duplicates
+        result = table.toRich(false);
+        Assertions.assertEquals(expected, result);
+        table.setOutputFormat(OutputFormat.RICH);
+        result = table.toString();
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
     public void testFormatted() {
         // this checks all the formatted outputs
         Map<OutputFormat, String> formats = new HashMap<OutputFormat, String>() {{
             put(OutputFormat.HTML, "html");
             put(OutputFormat.TEXT, "text");
+            put(OutputFormat.RICH, "txt");
         }};
         PrettyTable table = createFormattedTable();
         for (Map.Entry<OutputFormat, String> entry: formats.entrySet()) {
@@ -179,6 +199,12 @@ public class PrettyTableTest {
         Assertions.assertEquals(expected, result);
         result = table.formattedString(OutputFormat.TEXT, false);
         Assertions.assertEquals(expected, result);
+
+        expected = loadFileContent("PrettyTable_duplicate_undup.txt");
+        result = table.toRich(false);
+        Assertions.assertEquals(expected, result);
+        result = table.formattedString(OutputFormat.RICH, false);
+        Assertions.assertEquals(expected, result);
         
         expected = loadFileContent("PrettyTable_duplicate_undup.html");
         result  = table.toHtml(false);
@@ -201,6 +227,9 @@ public class PrettyTableTest {
 
         expected = loadFileContent("PrettyTable_duplicate_mixed.html");
         Assertions.assertEquals(expected, table.formattedString(OutputFormat.HTML));
+
+        expected = loadFileContent("PrettyTable_duplicate_mixed.txt");
+        Assertions.assertEquals(expected, table.formattedString(OutputFormat.RICH));
     }
 
      @Test
@@ -326,6 +355,8 @@ public class PrettyTableTest {
 
         String expected = loadFileContent("PrettyTable_newlines.text");
         Assertions.assertEquals(expected, table.formattedString(OutputFormat.TEXT));
+        expected = loadFileContent("PrettyTable_newlines.txt");
+        Assertions.assertEquals(expected, table.formattedString(OutputFormat.RICH));
     }
 
     @Test
@@ -371,6 +402,12 @@ public class PrettyTableTest {
         letters.setOutputFormat(OutputFormat.HTML);
         numbers.setOutputFormat(OutputFormat.CSV);
         big.setOutputFormat(OutputFormat.JSON);
+        Assertions.assertEquals(expected, big.toString());
+
+        expected = loadFileContent("PrettyTable_nested_mixed.txt");
+        letters.setOutputFormat(OutputFormat.JSON);
+        numbers.setOutputFormat(OutputFormat.CSV);
+        big.setOutputFormat(OutputFormat.RICH);
         Assertions.assertEquals(expected, big.toString());
     }
 
@@ -498,29 +535,37 @@ public class PrettyTableTest {
         table.addRow("A", "B", "F", "E");
 
         String dedupedText = loadFileContent("PrettyTable_duplicate.text");
+        String dedupedRich = loadFileContent("PrettyTable_duplicate.txt");
         String dedupedHtml = loadFileContent("PrettyTable_duplicate.html");
         String fullText = loadFileContent("PrettyTable_duplicate_undup.text");
+        String fullRich = loadFileContent("PrettyTable_duplicate_undup.txt");
         String fullHtml = loadFileContent("PrettyTable_duplicate_undup.html");
 
         Assertions.assertTrue(table.isRemoveRedundant());
         Assertions.assertEquals(dedupedText, table.formattedString(OutputFormat.TEXT));
+        Assertions.assertEquals(dedupedRich, table.formattedString(OutputFormat.RICH));
         Assertions.assertEquals(dedupedHtml, table.formattedString(OutputFormat.HTML));
         Assertions.assertEquals(dedupedText, table.toString());
 
         table.setRemoveRedundant(false);
         Assertions.assertFalse(table.isRemoveRedundant());
         Assertions.assertEquals(fullText, table.formattedString(OutputFormat.TEXT));
+        Assertions.assertEquals(fullRich, table.formattedString(OutputFormat.RICH));
         Assertions.assertEquals(fullHtml, table.formattedString(OutputFormat.HTML));
         Assertions.assertEquals(fullText, table.toString());
 
         table.setOutputFormat(OutputFormat.HTML);
         Assertions.assertEquals(fullHtml, table.toString());
+        table.setOutputFormat(OutputFormat.RICH);
+        Assertions.assertEquals(fullRich, table.toString());
 
         // the explicit flag still overrides the option
         Assertions.assertEquals(dedupedText, table.formattedString(OutputFormat.TEXT, true));
+        Assertions.assertEquals(dedupedRich, table.formattedString(OutputFormat.RICH, true));
         Assertions.assertEquals(dedupedHtml, table.formattedString(OutputFormat.HTML, true));
         table.setRemoveRedundant(true);
         Assertions.assertEquals(fullText, table.formattedString(OutputFormat.TEXT, false));
+        Assertions.assertEquals(fullRich, table.formattedString(OutputFormat.RICH, false));
         Assertions.assertEquals(fullHtml, table.toHtml(false));
 
         // CSV and JSON keep every value either way
