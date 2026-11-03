@@ -329,7 +329,7 @@ The sorting looks like this:
 ## TableBuilder Usage
 `TableBuilder` builds a `PrettyTable` from a `Map` or a `List`. The constructor takes an optional `BuilderConfig`. The data is passed to `build`, which returns the table. `build` returns `null` for `null` or an empty map or list, and throws `IllegalArgumentException` for any other type.
 
-A map becomes a Property / Value table. Nested maps become nested tables, and a list of plain values is joined into one cell. `null` renders as `None`. Booleans render as `True` and `False`.
+A map becomes a Property / Value table. Nested maps become nested tables, and a list of plain values is joined into one cell. The `BuilderConfig` provides configurability for how `null`, `True`, and `False` values show up.
 
 A list of strings, numbers, or booleans becomes one Items column with a caption such as `Found 6 items`. A list of maps uses the first matching key field (`name`, then `id`) as the row name. One other field becomes the second column. Further fields are nested under Properties. Long keys, values, and URLs are cut off with `...`.
 
@@ -382,6 +382,8 @@ import rickwporter.prettytable.BuilderConfig;
 | `setPropertyLabel` / `setValueLabel` | `Property` / `Value` |
 | `setPropertiesLabel` / `setValuesLabel` | `Properties` / `Values` |
 | `setUnknownLabel` | `Unknown` |
+| `setNullValue` | `None` |
+| `setTrueValue` / `setFalseValue` | `True` / `False` |
 | `setItemsCaption` | `Found {} items` |
 | `setEllipsis` | `...` |
 | `setWildcardHeader` | `Properties` |

@@ -129,13 +129,22 @@ public class TableBuilderTest {
         Assertions.assertEquals("Hello", custom.headerize("hello"));
     }
 
-    @Test 
+    @Test
     public void testStringify() {
-        Assertions.assertEquals("None", TableBuilder.stringify(null));
-        Assertions.assertEquals("True", TableBuilder.stringify(true));
-        Assertions.assertEquals("False", TableBuilder.stringify(false));
-        Assertions.assertEquals("My string", TableBuilder.stringify("My string"));
-        Assertions.assertEquals("3", TableBuilder.stringify(3));
+        TableBuilder obj = new TableBuilder();
+        Assertions.assertEquals("None", obj.stringify(null));
+        Assertions.assertEquals("True", obj.stringify(true));
+        Assertions.assertEquals("False", obj.stringify(false));
+        Assertions.assertEquals("My string", obj.stringify("My string"));
+        Assertions.assertEquals("3", obj.stringify(3));
+
+        TableBuilder custom = new TableBuilder(new BuilderConfig()
+                .setNullValue("nil")
+                .setTrueValue("yes")
+                .setFalseValue("no"));
+        Assertions.assertEquals("nil", custom.stringify(null));
+        Assertions.assertEquals("yes", custom.stringify(true));
+        Assertions.assertEquals("no", custom.stringify(false));
     }
 
     @Test
@@ -368,6 +377,32 @@ public class TableBuilderTest {
     @Test
     public void testNullConfigUsesDefaults() {
         this.assertRendered("TableBuilder_simple_dict.text", this.simpleDict(), null);
+    }
+
+    @Test
+    public void testNullValue() {
+        BuilderConfig options = new BuilderConfig().setNullValue("nil");
+        String rendered = new TableBuilder(options).build(this.simpleDict()).toString();
+        Assertions.assertTrue(rendered.contains("nil"));
+        Assertions.assertFalse(rendered.contains("None"));
+
+        String listed = new TableBuilder(options).build(this.simpleList()).toString();
+        Assertions.assertTrue(listed.contains("nil"));
+        Assertions.assertFalse(listed.contains("None"));
+    }
+
+    @Test
+    public void testBooleanValues() {
+        BuilderConfig options = new BuilderConfig()
+                .setTrueValue("yes")
+                .setFalseValue("no");
+        String rendered = new TableBuilder(options).build(this.simpleDict()).toString();
+        Assertions.assertTrue(rendered.contains("no"));
+        Assertions.assertFalse(rendered.contains("False"));
+
+        String nested = new TableBuilder(options).build(this.innerList()).toString();
+        Assertions.assertTrue(nested.contains("yes"));
+        Assertions.assertFalse(nested.contains("True"));
     }
 
     @Test
