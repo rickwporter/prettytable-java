@@ -16,6 +16,9 @@ public final class BuilderConfig {
     private String valueLabel = "Value";
     private String valuesLabel = "Values";
     private String unknownLabel = "Unknown";
+    private String nullValue = "None";
+    private String trueValue = "True";
+    private String falseValue = "False";
     private String itemsCaption = "Found {} items";
     private String ellipsis = "...";
     private String wildcardHeader = "Properties";
@@ -77,6 +80,33 @@ public final class BuilderConfig {
 
     public BuilderConfig setUnknownLabel(String label) {
         this.unknownLabel = Objects.requireNonNull(label);
+        return this;
+    }
+
+    public String getNullValue() {
+        return this.nullValue;
+    }
+
+    public BuilderConfig setNullValue(String text) {
+        this.nullValue = Objects.requireNonNull(text);
+        return this;
+    }
+
+    public String getTrueValue() {
+        return this.trueValue;
+    }
+
+    public BuilderConfig setTrueValue(String text) {
+        this.trueValue = Objects.requireNonNull(text);
+        return this;
+    }
+
+    public String getFalseValue() {
+        return this.falseValue;
+    }
+
+    public BuilderConfig setFalseValue(String text) {
+        this.falseValue = Objects.requireNonNull(text);
         return this;
     }
 

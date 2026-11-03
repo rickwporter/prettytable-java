@@ -125,7 +125,7 @@ public final class TableBuilder {
 
         Object other = this.singleOtherKey(first, nameKey);
         if (other != MANY_KEYS) {
-            PrettyTable result = new PrettyTable(this.headerize(nameKey), this.headerize(stringify(other)));
+            PrettyTable result = new PrettyTable(this.headerize(nameKey), this.headerize(this.stringify(other)));
             this.configure(result, outer, true, caption);
             for (Object item : items) {
                 Map<?, ?> map = asMap(item);
@@ -148,7 +148,7 @@ public final class TableBuilder {
         PrettyTable result = new PrettyTable(this.config.getPropertyLabel(), this.config.getValueLabel());
         this.configure(result, outer, false, null);
         for (Map.Entry<?, ?> entry : obj.entrySet()) {
-            String key = this.truncate(stringify(entry.getKey()), this.config.getKeyMaxLen());
+            String key = this.truncate(this.stringify(entry.getKey()), this.config.getKeyMaxLen());
             result.addRow(key, this.cellValue(entry.getValue()));
         }
         return result;
@@ -164,10 +164,10 @@ public final class TableBuilder {
                 return this.createListTable(list, false);
             }
             if (!list.isEmpty()) {
-                return this.truncate(joinList(list), this.config.getValueMaxLen());
+                return this.truncate(this.joinList(list), this.config.getValueMaxLen());
             }
         }
-        String text = stringify(obj);
+        String text = this.stringify(obj);
         int maxLen = this.isUrl(text) ? this.config.getUrlMaxLen() : this.config.getValueMaxLen();
         return this.truncate(text, maxLen);
     }
@@ -210,7 +210,7 @@ public final class TableBuilder {
 
     private String nameCell(Map<?, ?> map, String nameKey) {
         Object raw = map.containsKey(nameKey) ? map.get(nameKey) : this.config.getUnknownLabel();
-        return this.truncate(stringify(raw), this.config.getKeyMaxLen());
+        return this.truncate(this.stringify(raw), this.config.getKeyMaxLen());
     }
 
     private boolean isUrl(String text) {
@@ -240,13 +240,13 @@ public final class TableBuilder {
         return copy;
     }
 
-    private static String joinList(List<?> items) {
+    private String joinList(List<?> items) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < items.size(); i++) {
             if (i > 0) {
                 result.append(", ");
             }
-            result.append(stringify(items.get(i)));
+            result.append(this.stringify(items.get(i)));
         }
         return result.toString();
     }
@@ -261,12 +261,12 @@ public final class TableBuilder {
         return Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
 
-    static String stringify(Object value) {
+    String stringify(Object value) {
         if (value == null) {
-            return "None";
+            return this.config.getNullValue();
         }
         if (value instanceof Boolean) {
-            return ((Boolean) value).booleanValue() ? "True" : "False";
+            return ((Boolean) value).booleanValue() ? this.config.getTrueValue() : this.config.getFalseValue();
         }
         return String.valueOf(value);
     }

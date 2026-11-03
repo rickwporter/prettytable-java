@@ -17,6 +17,9 @@ public class BuilderConfigTest {
         Assertions.assertEquals("Value", config.getValueLabel());
         Assertions.assertEquals("Values", config.getValuesLabel());
         Assertions.assertEquals("Unknown", config.getUnknownLabel());
+        Assertions.assertEquals("None", config.getNullValue());
+        Assertions.assertEquals("True", config.getTrueValue());
+        Assertions.assertEquals("False", config.getFalseValue());
         Assertions.assertEquals("Found {} items", config.getItemsCaption());
         Assertions.assertEquals("...", config.getEllipsis());
         Assertions.assertEquals("Properties", config.getWildcardHeader());
@@ -49,6 +52,15 @@ public class BuilderConfigTest {
 
         Assertions.assertSame(config, config.setUnknownLabel("pluto"));
         Assertions.assertEquals("pluto", config.getUnknownLabel());
+
+        Assertions.assertSame(config, config.setNullValue("nil"));
+        Assertions.assertEquals("nil", config.getNullValue());
+
+        Assertions.assertSame(config, config.setTrueValue("yes"));
+        Assertions.assertEquals("yes", config.getTrueValue());
+
+        Assertions.assertSame(config, config.setFalseValue("no"));
+        Assertions.assertEquals("no", config.getFalseValue());
 
         Assertions.assertSame(config, config.setItemsCaption("huey, dewey, louie"));
         Assertions.assertEquals("huey, dewey, louie", config.getItemsCaption());
@@ -111,6 +123,15 @@ public class BuilderConfigTest {
 
         Assertions.assertThrows(NullPointerException.class, () -> config.setUnknownLabel(null));
         Assertions.assertEquals("Unknown", config.getUnknownLabel());
+
+        Assertions.assertThrows(NullPointerException.class, () -> config.setNullValue(null));
+        Assertions.assertEquals("None", config.getNullValue());
+
+        Assertions.assertThrows(NullPointerException.class, () -> config.setTrueValue(null));
+        Assertions.assertEquals("True", config.getTrueValue());
+
+        Assertions.assertThrows(NullPointerException.class, () -> config.setFalseValue(null));
+        Assertions.assertEquals("False", config.getFalseValue());
 
         Assertions.assertThrows(NullPointerException.class, () -> config.setItemsCaption(null));
         Assertions.assertEquals("Found {} items", config.getItemsCaption());
