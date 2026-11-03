@@ -26,6 +26,7 @@ public final class PrettyTable {
 
     public enum OutputFormat {
         TEXT,
+        RICH,
         CSV,
         HTML,
         JSON,
@@ -211,6 +212,10 @@ public final class PrettyTable {
         return formattedString(OutputFormat.TEXT, removeRedundant);
     }
 
+    String toRich(boolean removeRedundant) {
+        return formattedString(OutputFormat.RICH, removeRedundant);
+    }
+
     String toCsv() {
         return formattedString(OutputFormat.CSV, false);
     }
@@ -231,6 +236,8 @@ public final class PrettyTable {
         final TableRenderInterface renderer;
         if (format == OutputFormat.TEXT) {
             renderer = new TextTableRender();
+        } else if (format == OutputFormat.RICH) {
+            renderer = new RichTableRender();
         } else if (format == OutputFormat.CSV) {
             renderer = new CsvTableRender();
         } else if (format == OutputFormat.JSON) {
