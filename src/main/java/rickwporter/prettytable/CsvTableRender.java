@@ -13,7 +13,7 @@ class CsvTableRender implements TableRenderInterface {
     public String render(PrettyTable table, boolean removedRedundant) {
         try {
             StringBuilder result = new StringBuilder();
-            CSVFormat format = CSVFormat.DEFAULT.builder().setRecordSeparator("\n").build();
+            CSVFormat format = CSVFormat.DEFAULT.builder().setRecordSeparator("\n").get();
             CSVPrinter printer = new CSVPrinter(result, format);
             if (!table.getHeaders().isEmpty()) {
                 printer.printRecord(table.getHeaders());
