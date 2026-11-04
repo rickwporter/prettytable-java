@@ -14,7 +14,7 @@ on:
       - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -28,17 +28,36 @@ jobs:
     - name: Check coding style
       run: mvn -B -ntp checkstyle:check
 
+  depend-checks:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+
     - name: Dependency tree
       run: mvn -B -ntp dependency:tree
 
     - name: Dependency checking
       run: mvn -B -ntp dependency:analyze-only
 
-    - name: Unit test and coverage
-      run: mvn -B -ntp test jacoco:report
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
 
-    - name: Build with Maven
-      run: mvn -B -ntp -DskipTests=true -Dcheckstyle.skip package
+    - name: Unit test and coverage
+      run: mvn -B -ntp test jacoco:report jacoco-console-reporter:report
 
     - name: Code Coverage Report
       id: jacoco
@@ -48,10 +67,23 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         min-coverage-overall: 80
         min-coverage-changed-files: 90
-  
+
     - name: Upload Coverage Report
       uses: actions/upload-artifact@v4
       with:
         name: jacoco-report
         path: target/site/jacoco/
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build with Maven
+      run: mvn -B -ntp -DskipTests=true -Dcheckstyle.skip package
