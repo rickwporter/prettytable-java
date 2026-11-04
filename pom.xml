@@ -1,11 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>rickwporter.prettytable</groupId>
-  <artifactId>rickwporter-prettytable</artifactId>
+  <groupId>io.github.rickwporter</groupId>
+  <artifactId>prettytable</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>rickwporter-prettytable</name>
+  <description>Displays List and Map object data in a variety of forms (e.g. text [ascii], rich [utf-8], csv, html, json)</description>
+  <url>https://github.com/rickwporter/prettytable-java</url>
+  <developers>
+    <developer>
+      <name>Rick W. Porter</name>
+      <email>rickwporter@gmail.com</email>
+      <id>rickwporter</id>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:https://github.com/rickwporter/prettytable-java.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/rickwporter/prettytable-java.git</developerConnection>
+    <url>https://github.com/rickwporter/prettytable-java</url>
+  </scm>
 
   <properties>
     <!-- Project stuff -->
@@ -26,6 +46,13 @@
     <!-- Checkstyle -->
     <version.plugin.checkstyle>3.6.0</version.plugin.checkstyle>
     <version.checkstyle>8.30</version.checkstyle>
+
+    <!-- Publish -->
+    <version.plugin.source>3.4.0</version.plugin.source>
+    <version.plugin.javadoc>3.12.0</version.plugin.javadoc>
+    <version.plugin.gpg>3.2.8</version.plugin.gpg>
+    <version.plugin.deploy>3.2.0</version.plugin.deploy>
+    <version.plugin.central>0.12.0</version.plugin.central>
   </properties>
 
   <dependencies>
@@ -127,7 +154,97 @@
           <silent>true</silent>
         </configuration>
       </plugin>
+      <!-- Sources jar required by Maven Central -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>${version.plugin.source}</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Javadoc jar required by Maven Central -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${version.plugin.javadoc}</version>
+        <configuration>
+          <doclint>none</doclint>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/rickwporter/prettytable-java</url>
+    </repository>
+  </distributionManagement>
+
+  <profiles>
+    <!-- mvn deploy -Pcentral publishes to Maven Central. The deploy plugin is skipped
+         so this profile does not also upload to GitHub Packages. -->
+    <profile>
+      <id>central</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${version.plugin.gpg}</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>${version.plugin.deploy}</version>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>${version.plugin.central}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+              <waitUntil>published</waitUntil>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

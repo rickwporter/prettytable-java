@@ -3,7 +3,7 @@
 ![Coverage](.github/badges/jacoco.svg)
 ![Branches](.github/badges/branches.svg)
 
-Display data in a tabular form with Java
+Displays List and Map data in a variety of forms.
 
 The data can be output in several different different forms:
 * **text** - attractive ASCII format

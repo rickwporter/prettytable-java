@@ -1,0 +1,60 @@
+# Publishes this package when a GitHub release is created.
+# https://docs.github.com/en/actions/tutorials/publish-packages/publish-java-packages-with-maven
+#
+# That guide's Maven Central example still points at the legacy OSSRH staging
+# repository. This workflow publishes to the Central Portal instead.
+#
+# Repository secrets:
+#   CENTRAL_USERNAME, CENTRAL_TOKEN — user token from https://central.sonatype.com
+#   MAVEN_GPG_PRIVATE_KEY — ASCII-armored GPG private key
+#   MAVEN_GPG_PASSPHRASE — passphrase for that key, if it has one
+
+name: Publish package to the Maven Central Repository and GitHub Packages
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Java for publishing to Maven Central Repository
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+        env:
+          MAVEN_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Publish to the Maven Central Repository
+        run: mvn --batch-mode deploy -Pcentral
+        env:
+          MAVEN_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Set up Java for publishing to GitHub Packages
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Publish to GitHub Packages
+        run: mvn --batch-mode deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
