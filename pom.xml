@@ -53,6 +53,7 @@
     <version.plugin.gpg>3.2.8</version.plugin.gpg>
     <version.plugin.deploy>3.2.0</version.plugin.deploy>
     <version.plugin.central>0.12.0</version.plugin.central>
+    <version.plugin.dependency>3.11.0</version.plugin.dependency>
   </properties>
 
   <dependencies>
@@ -134,6 +135,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
+        <version>${version.plugin.dependency}</version>
         <executions>
           <execution>
             <id>analyze</id>
