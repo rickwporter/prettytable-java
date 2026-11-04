@@ -41,7 +41,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
       - name: Publish to the Maven Central Repository
-        run: mvn --batch-mode deploy -Pcentral
+        run: mvn -ntp --batch-mode deploy -Pcentral
         env:
           MAVEN_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN }}
@@ -55,6 +55,6 @@ jobs:
           cache: maven
 
       - name: Publish to GitHub Packages
-        run: mvn --batch-mode deploy
+        run: mvn -ntp --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
