@@ -57,7 +57,7 @@ jobs:
         cache: maven
 
     - name: Unit test and coverage
-      run: mvn -B -ntp test jacoco:report
+      run: mvn -B -ntp test jacoco:report jacoco-console-reporter:report
 
     - name: Code Coverage Report
       id: jacoco
