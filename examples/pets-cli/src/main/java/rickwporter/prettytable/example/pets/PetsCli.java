@@ -20,9 +20,8 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 import picocli.CommandLine.ScopeType;
 import picocli.CommandLine.Spec;
-
 import rickwporter.prettytable.PrettyTable;
-import rickwporter.prettytable.PrettyTable.OutputFormat;
+import rickwporter.prettytable.OutputFormat;
 import rickwporter.prettytable.TableBuilder;
 
 @Command(
@@ -145,12 +144,11 @@ public final class PetsCli implements Callable<Integer> {
             if (body instanceof String || body instanceof Number || body instanceof Boolean) {
                 return String.valueOf(body);
             }
-            PrettyTable table = new TableBuilder().build(body);
+            PrettyTable table = new TableBuilder().build(this.parent.format, body);
             if (table == null) {
                 return "";
             }
-            OutputFormat format = this.parent.format;
-            return table.formattedString(format == null ? OutputFormat.RICH : format);
+            return table.toString();
         }
 
         protected int show(Object body) {
