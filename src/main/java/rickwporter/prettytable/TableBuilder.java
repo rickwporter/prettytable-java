@@ -171,6 +171,7 @@ public final class TableBuilder {
     }
 
     private void configure(PrettyTable result, boolean outer, boolean dividers, String caption) {
+        result.setOutputFormat(this.config.getFormat());
         result.setShowHeader(outer);
         result.setShowLines(outer);
         result.setRowDividers(dividers);
