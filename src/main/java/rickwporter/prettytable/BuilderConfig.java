@@ -27,6 +27,7 @@ public final class BuilderConfig {
     private List<String> keyFields = new ArrayList<String>(Arrays.asList("name", "id"));
     private int keyMaxLen = DEFAULT_KEY_MAX_LEN;
     private int valueMaxLen = DEFAULT_VALUE_MAX_LEN;
+    private OutputFormat format = OutputFormat.RICH;
     private List<String> columns = null;
 
     public String getItemsLabel() {
@@ -179,6 +180,15 @@ public final class BuilderConfig {
 
     public BuilderConfig setValueMaxLen(int maxLen) {
         this.valueMaxLen = maxLen;
+        return this;
+    }
+
+    public OutputFormat getFormat() {
+        return this.format;
+    }
+
+    public BuilderConfig setFormat(OutputFormat outputFormat) {
+        this.format = Objects.requireNonNull(outputFormat);
         return this;
     }
 
