@@ -29,7 +29,7 @@ The `PrettyTable` class handles a table as shown above. The `TableBuilder` class
 Here are the basics for how to create a `PrettyTable` as shown above:
 ```Java
 import rickwporter.prettytable.PrettyTable;
-import rickwporter.prettytable.PrettyTable.OutputFormat;
+import rickwporter.prettytable.OutputFormat;
 
       PrettyTable table = new PrettyTable("Column A", "Column 2", "Column III");
       table.addRow("A", "B", "c");

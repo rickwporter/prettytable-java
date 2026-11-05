@@ -24,14 +24,6 @@ public final class PrettyTable {
         }
     }
 
-    public enum OutputFormat {
-        TEXT,
-        RICH,
-        CSV,
-        HTML,
-        JSON,
-    }
-
     private List<String> headers = new ArrayList<>();
     private List<List<Object>> rows = new ArrayList<>();
     private List<HorizontalAlign> hAligns = new ArrayList<>();
