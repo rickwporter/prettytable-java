@@ -3,6 +3,7 @@
 
 # Build Artifacts
 /target
+examples/**/target/
 
 # Compiled class file
 *.class

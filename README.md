@@ -331,6 +331,8 @@ The sorting looks like this:
 
 A map becomes a Property / Value table. Nested maps become nested tables, and a list of plain values is joined into one cell. The `BuilderConfig` provides configurability for how `null`, `True`, and `False` values show up.
 
+The [pets-cli example](examples/pets-cli) code has a more complete example.
+
 A list of strings, numbers, or booleans becomes one Items column with a caption such as `Found 6 items`. A list of maps uses the first matching key field (`name`, then `id`) as the row name. One other field becomes the second column. Further fields are nested under Properties. Long keys, values, and URLs are cut off with `...`.
 
 ```Java
@@ -391,6 +393,10 @@ import rickwporter.prettytable.BuilderConfig;
 | `setKeyMaxLen` / `setValueMaxLen` / `setUrlMaxLen` | 35 / 50 / 100 |
 | `setUrlPrefixes` | `http://`, `https://`, `ftp://` |
 | `setColumns` | `null` |
+
+## Example
+
+[`examples/pets-cli`](examples/pets-cli) is a [picocli](https://picocli.info/) client for the modified [OpenAPI Petstore](examples/pets.yaml). It prints JSON responses with `TableBuilder`. See the example README for how to build and run it.
 
 ## Development
 
