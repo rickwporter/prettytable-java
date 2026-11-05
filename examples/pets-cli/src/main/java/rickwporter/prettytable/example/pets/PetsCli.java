@@ -12,6 +12,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
@@ -137,6 +142,18 @@ public final class PetsCli implements Callable<Integer> {
             return CommandLine.ExitCode.USAGE;
         }
 
+        public String renderJson(Object body) {
+            DefaultIndenter indent = new DefaultIndenter("    ", "\n");
+            DefaultPrettyPrinter printer = new DefaultPrettyPrinter()
+                    .withArrayIndenter(indent)
+                    .withObjectIndenter(indent);
+            try {
+                return new ObjectMapper().writer(printer).writeValueAsString(body);
+            } catch (JsonProcessingException ex) {
+                throw new IllegalStateException("Could not render JSON", ex);
+            }
+        }
+
         private String render(Object body) {
             if (body == null) {
                 return "";
@@ -144,6 +161,10 @@ public final class PetsCli implements Callable<Integer> {
             if (body instanceof String || body instanceof Number || body instanceof Boolean) {
                 return String.valueOf(body);
             }
+            if (this.parent.format == OutputFormat.JSON) {
+                return this.renderJson(body);
+            }
+
             PrettyTable table = new TableBuilder().build(this.parent.format, body);
             if (table == null) {
                 return "";
