@@ -131,7 +131,7 @@ Using the **json** format (e.g. `OutputFormat.JSON`), you get the following outp
 ### Alignment
 ASCII **text**, **rich**, and **html** support different alignments. Here's how you would update the above table:
 ```Java
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
+import rickwporter.prettytable.HorizontalAlign;
 
       table.setHorizAligns(HorizontalAlign.LEFT, HorizontalAlign.CENTER, HorizontalAlign.RIGHT);
 ```

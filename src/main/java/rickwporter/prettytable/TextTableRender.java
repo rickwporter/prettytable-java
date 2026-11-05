@@ -3,8 +3,6 @@ package rickwporter.prettytable;
 import java.util.ArrayList;
 import java.util.List;
 
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
-
 class TextTableRender extends BaseTextTableRender {
     private static final TableGlyphs RULE = new TableGlyphs('+', '-', '+', '+');
     private static final TableGlyphs VERTICAL = new TableGlyphs('|', ' ', '|', '|');

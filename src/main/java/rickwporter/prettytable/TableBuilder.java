@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
-
 public final class TableBuilder {
     private static final String WILDCARD_COLUMN = "*";
     private static final Object MANY_KEYS = new Object();

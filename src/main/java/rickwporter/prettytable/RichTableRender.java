@@ -3,8 +3,6 @@ package rickwporter.prettytable;
 import java.util.ArrayList;
 import java.util.List;
 
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
-
 class RichTableRender extends BaseTextTableRender {
     // Four characters are left, fill, junction, right.
     private static final TableGlyphs HEAVY_TOP = new TableGlyphs('┏', '━', '┳', '┓');

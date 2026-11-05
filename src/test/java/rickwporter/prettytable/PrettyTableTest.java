@@ -1,7 +1,5 @@
 package rickwporter.prettytable;
 
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 

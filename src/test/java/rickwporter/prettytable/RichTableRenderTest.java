@@ -12,8 +12,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
-
 public class RichTableRenderTest {
     @Test
     public void testBasicRich() {
