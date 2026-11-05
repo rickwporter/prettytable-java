@@ -1,0 +1,21 @@
+Property,Value
+prop 1,simple
+prOp B,"Name,Properties
+sna,""Property,Value
+abc,def
+ghi,True
+""
+foo,""Property,Value
+abc,def
+ghi,None
+""
+bar,""Property,Value
+abc,def
+ghi,1.2345
+""
+Unknown,""Property,Value
+abc,def
+ghi,blah
+""
+"
+Prop III,None

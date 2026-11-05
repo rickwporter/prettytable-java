@@ -22,6 +22,16 @@ public final class TableBuilder {
         this.config = options == null ? new BuilderConfig() : options;
     }
 
+    public PrettyTable build(OutputFormat format, Object data) {
+        OutputFormat original = this.config.getFormat();
+        this.config.setFormat(format);
+
+        // store the result while we set the format back to the original
+        PrettyTable result = this.build(data);
+        this.config.setFormat(original);
+        return result;
+    }
+
     public PrettyTable build(Object data) {
         if (isNothing(data)) {
             return null;

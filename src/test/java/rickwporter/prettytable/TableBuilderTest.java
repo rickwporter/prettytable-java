@@ -106,7 +106,10 @@ public class TableBuilderTest {
     }
 
     private void assertRendered(String filename, Object data) {
-        this.assertRendered(filename, data, null);
+        // original TableBuilder tests were done with text, so use that as the default
+        BuilderConfig config = new BuilderConfig();
+        config.setFormat(OutputFormat.TEXT);
+        this.assertRendered(filename, data, config);
     }
 
     private void assertRendered(String filename, Object data, BuilderConfig options) {
@@ -219,6 +222,38 @@ public class TableBuilderTest {
     }
 
     @Test
+    public void testInnerListFormats() {
+        TableBuilder builder = new TableBuilder();
+        String actual;
+        String expected;
+
+        actual = builder.build(OutputFormat.RICH, this.innerList()).toString();
+        expected = this.loadFileContent("TableBuilder_inner.txt");
+        Assertions.assertEquals(expected, actual);
+
+        actual = builder.build(OutputFormat.TEXT, this.innerList()).toString();
+        expected = this.loadFileContent("TableBuilder_inner.text");
+        Assertions.assertEquals(expected, actual);
+
+        actual = builder.build(OutputFormat.JSON, this.innerList()).toString();
+        expected = this.loadFileContent("TableBuilder_inner.json");
+        Assertions.assertEquals(expected, actual);
+
+        actual = builder.build(OutputFormat.HTML, this.innerList()).toString();
+        expected = this.loadFileContent("TableBuilder_inner.html");
+        Assertions.assertEquals(expected, actual);
+
+        actual = builder.build(OutputFormat.CSV, this.innerList()).toString();
+        expected = this.loadFileContent("TableBuilder_inner.csv");
+        Assertions.assertEquals(expected, actual);
+
+        // still at RICH output
+        actual = builder.build(this.innerList()).toString();
+        expected = this.loadFileContent("TableBuilder_inner.txt");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
     public void testReadmeList() {
         this.assertRendered("TableBuilder_readme.text", this.readmeList());
     }
@@ -260,6 +295,7 @@ public class TableBuilderTest {
     @Test
     public void testConfigTruncated() {
         BuilderConfig options = new BuilderConfig()
+                .setFormat(OutputFormat.TEXT)
                 .setUrlMaxLen(16)
                 .setValueMaxLen(20)
                 .setKeyMaxLen(4);
@@ -269,6 +305,7 @@ public class TableBuilderTest {
     @Test
     public void testConfigLabels() {
         BuilderConfig options = new BuilderConfig()
+                .setFormat(OutputFormat.TEXT)
                 .setUrlMaxLen(16)
                 .setValueMaxLen(50)
                 .setKeyMaxLen(100)
@@ -281,6 +318,7 @@ public class TableBuilderTest {
     @Test
     public void testConfigInnerList() {
         BuilderConfig options = new BuilderConfig()
+                .setFormat(OutputFormat.TEXT)
                 .setKeyFields(Arrays.asList("ghi"))
                 .setPropertiesLabel("Different");
         this.assertRendered("TableBuilder_config_inner.text", this.innerList(), options);
@@ -289,18 +327,18 @@ public class TableBuilderTest {
     @Test
     public void testColumns() {
         this.assertRendered("TableBuilder_columns.text", this.columnList(),
-                new BuilderConfig().setColumns(Arrays.asList("service", "name")));
+                new BuilderConfig().setFormat(OutputFormat.TEXT).setColumns(Arrays.asList("service", "name")));
         this.assertRendered("TableBuilder_columns_wild.text", this.columnList(),
-                new BuilderConfig().setColumns(Arrays.asList("service", "*", "id")));
+                new BuilderConfig().setFormat(OutputFormat.TEXT).setColumns(Arrays.asList("service", "*", "id")));
         this.assertRendered("TableBuilder_columns_missing.text", this.columnList(),
-                new BuilderConfig().setColumns(Arrays.asList("id", "missing", "name")));
+                new BuilderConfig().setFormat(OutputFormat.TEXT).setColumns(Arrays.asList("id", "missing", "name")));
     }
 
     @Test
     public void testEmptyColumnsUsesDefaultList() {
         List<Object> items = new ArrayList<Object>();
         items.add(mapOf("name", "a", "x", 1, "y", 2));
-        PrettyTable table = new TableBuilder(new BuilderConfig().setColumns(new ArrayList<String>())).build(items);
+        PrettyTable table = new TableBuilder(new BuilderConfig().setFormat(OutputFormat.TEXT).setColumns(new ArrayList<String>())).build(items);
         Assertions.assertEquals(Arrays.asList("Name", "Properties"), table.getHeaders());
     }
 
@@ -314,6 +352,7 @@ public class TableBuilderTest {
     @Test
     public void testCaptionWrap() {
         BuilderConfig options = new BuilderConfig()
+                .setFormat(OutputFormat.TEXT)
                 .setItemsLabel("Simple stuff")
                 .setItemsCaption("Got {} simple things");
         this.assertRendered("TableBuilder_caption.text", this.simpleList(), options);
@@ -322,6 +361,7 @@ public class TableBuilderTest {
     @Test
     public void testCaptionLong() {
         BuilderConfig options = new BuilderConfig()
+                .setFormat(OutputFormat.TEXT)
                 .setItemsCaption("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         this.assertRendered("TableBuilder_caption_long.text", Arrays.asList("a"), options);
     }
@@ -368,13 +408,14 @@ public class TableBuilderTest {
     @Test
     public void testColumnsIgnoredForMap() {
         BuilderConfig options = new BuilderConfig()
+                .setFormat(OutputFormat.TEXT)
                 .setColumns(Arrays.asList("abc"));
         this.assertRendered("TableBuilder_simple_dict.text", this.simpleDict(), options);
     }
 
     @Test
     public void testNullConfigUsesDefaults() {
-        this.assertRendered("TableBuilder_simple_dict.text", this.simpleDict(), null);
+        this.assertRendered("TableBuilder_simple_dict.txt", this.simpleDict(), null);
     }
 
     @Test
@@ -420,6 +461,18 @@ public class TableBuilderTest {
         String rendered = new TableBuilder(options).build(this.columnList()).toString();
         Assertions.assertTrue(rendered.contains("Properties"));
         Assertions.assertFalse(rendered.contains("Different"));
+    }
+
+    @Test
+    public void testOutputFormat() {
+        PrettyTable defaults = new TableBuilder().build(this.innerList());
+        Assertions.assertEquals(OutputFormat.RICH, defaults.getDefaultOutput());
+        Assertions.assertEquals(OutputFormat.RICH, ((PrettyTable) defaults.getCell(1, 1)).getDefaultOutput());
+
+        BuilderConfig options = new BuilderConfig().setFormat(OutputFormat.JSON);
+        PrettyTable table = new TableBuilder(options).build(this.innerList());
+        Assertions.assertEquals(OutputFormat.JSON, table.getDefaultOutput());
+        Assertions.assertEquals(OutputFormat.JSON, ((PrettyTable) table.getCell(1, 1)).getDefaultOutput());
     }
 
     @Test
