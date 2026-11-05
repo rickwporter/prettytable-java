@@ -29,7 +29,7 @@ The `PrettyTable` class handles a table as shown above. The `TableBuilder` class
 Here are the basics for how to create a `PrettyTable` as shown above:
 ```Java
 import rickwporter.prettytable.PrettyTable;
-import rickwporter.prettytable.PrettyTable.OutputFormat;
+import rickwporter.prettytable.OutputFormat;
 
       PrettyTable table = new PrettyTable("Column A", "Column 2", "Column III");
       table.addRow("A", "B", "c");
@@ -131,7 +131,7 @@ Using the **json** format (e.g. `OutputFormat.JSON`), you get the following outp
 ### Alignment
 ASCII **text**, **rich**, and **html** support different alignments. Here's how you would update the above table:
 ```Java
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
+import rickwporter.prettytable.HorizontalAlign;
 
       table.setHorizAligns(HorizontalAlign.LEFT, HorizontalAlign.CENTER, HorizontalAlign.RIGHT);
 ```

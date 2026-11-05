@@ -10,28 +10,6 @@ import java.util.regex.Pattern;
 public final class PrettyTable {
     private static final Pattern NEWLINE = Pattern.compile("\\R");
 
-    public enum HorizontalAlign {
-        CENTER("text-align:center"),
-        LEFT("text-align:left"),
-        RIGHT("text-align:right");
-
-        private final String htmlStyle;
-        HorizontalAlign(String html) {
-            this.htmlStyle = html;
-        }
-        public String getHtmlStyle() {
-            return this.htmlStyle;
-        }
-    }
-
-    public enum OutputFormat {
-        TEXT,
-        RICH,
-        CSV,
-        HTML,
-        JSON,
-    }
-
     private List<String> headers = new ArrayList<>();
     private List<List<Object>> rows = new ArrayList<>();
     private List<HorizontalAlign> hAligns = new ArrayList<>();

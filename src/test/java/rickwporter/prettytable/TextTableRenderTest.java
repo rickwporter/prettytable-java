@@ -1,11 +1,7 @@
 package rickwporter.prettytable;
 
-import org.junit.jupiter.api.Test;
-
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
-import rickwporter.prettytable.PrettyTable.OutputFormat;
-
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TextTableRenderTest {
     @Test 

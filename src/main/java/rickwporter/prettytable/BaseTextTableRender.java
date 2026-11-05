@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
-
 abstract class BaseTextTableRender implements TableRenderInterface {
     private static final Pattern NEWLINE = Pattern.compile("\\R");
 

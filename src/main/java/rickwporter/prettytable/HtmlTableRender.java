@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import rickwporter.prettytable.PrettyTable.HorizontalAlign;
-import rickwporter.prettytable.PrettyTable.OutputFormat;
-
 class HtmlTableRender implements TableRenderInterface {
     private static final String HTML_TABLE_TAG = "table";
     private static final String HTML_HEADER_TAG = "thead";
