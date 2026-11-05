@@ -28,6 +28,7 @@ public class BuilderConfigTest {
         Assertions.assertEquals(Arrays.asList("name", "id"), config.getKeyFields());
         Assertions.assertEquals(35, config.getKeyMaxLen());
         Assertions.assertEquals(50, config.getValueMaxLen());
+        Assertions.assertEquals(OutputFormat.RICH, config.getFormat());
         Assertions.assertNull(config.getColumns());
     }
 
@@ -90,6 +91,9 @@ public class BuilderConfigTest {
         Assertions.assertSame(config, config.setValueMaxLen(3));
         Assertions.assertEquals(3, config.getValueMaxLen());
 
+        Assertions.assertSame(config, config.setFormat(OutputFormat.JSON));
+        Assertions.assertEquals(OutputFormat.JSON, config.getFormat());
+
         List<String> columns = new ArrayList<String>(Arrays.asList("service", "name"));
         Assertions.assertSame(config, config.setColumns(columns));
         columns.add("id");
@@ -147,5 +151,8 @@ public class BuilderConfigTest {
 
         Assertions.assertThrows(NullPointerException.class, () -> config.setKeyFields(null));
         Assertions.assertEquals(Arrays.asList("name", "id"), config.getKeyFields());
+
+        Assertions.assertThrows(NullPointerException.class, () -> config.setFormat(null));
+        Assertions.assertEquals(OutputFormat.RICH, config.getFormat());
     }
 }
