@@ -6,4 +6,5 @@ public enum OutputFormat {
     CSV,
     HTML,
     JSON,
+    YAML,
 }

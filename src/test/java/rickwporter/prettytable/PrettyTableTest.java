@@ -18,6 +18,7 @@ public class PrettyTableTest {
         put(OutputFormat.CSV, "csv");
         put(OutputFormat.HTML, "html");
         put(OutputFormat.JSON, "json");
+        put(OutputFormat.YAML, "yaml");
     }};
 
     final String loadFileContent(String filename) {
@@ -92,6 +93,19 @@ public class PrettyTableTest {
     }
 
     @Test
+    public void testBasicYaml() {
+        PrettyTable table = createBasicTable();
+        String result = table.toYaml();
+        String expected = loadFileContent("PrettyTable_basic.yaml");
+        Assertions.assertEquals(expected, result);
+        result = table.formattedString(OutputFormat.YAML);
+        Assertions.assertEquals(expected, result);
+        table.setOutputFormat(OutputFormat.YAML);
+        result = table.toString();
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
     public void testBasicText() {
         PrettyTable table = createBasicTable();
         String result = table.toText(true);
@@ -158,6 +172,7 @@ public class PrettyTableTest {
         Map<OutputFormat, String> formats = new HashMap<OutputFormat, String>() {{
             put(OutputFormat.CSV, "csv");
             put(OutputFormat.JSON, "json");
+            put(OutputFormat.YAML, "yaml");
         }};
         PrettyTable table = createFormattedTable();
         for (Map.Entry<OutputFormat, String> entry: formats.entrySet()) {
@@ -283,6 +298,10 @@ public class PrettyTableTest {
         String expected = loadFileContent("PrettyTable_stringnum.json");
         String result = table.formattedString(OutputFormat.JSON);
         Assertions.assertEquals(expected, result);
+
+        expected = loadFileContent("PrettyTable_stringnum.yaml");
+        result = table.formattedString(OutputFormat.YAML);
+        Assertions.assertEquals(expected, result);
      }
 
      @Test
@@ -328,6 +347,17 @@ public class PrettyTableTest {
 
         Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.sortByIndex(500));
         Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.sortByHeader("Q"));
+    }
+
+    @Test
+    public void testYamlEncoding() {
+        PrettyTable table = new PrettyTable("note", "value");
+        table.addRow("a: b", "say \"hi\"");
+        table.addRow("line1\nline2", "plain");
+        table.addRow("crlf\r\nhere", "tab\there");
+
+        String expected = loadFileContent("PrettyTable_yaml_encoded.yaml");
+        Assertions.assertEquals(expected, table.formattedString(OutputFormat.YAML));
     }
 
     @Test
@@ -399,6 +429,12 @@ public class PrettyTableTest {
         letters.setOutputFormat(OutputFormat.HTML);
         numbers.setOutputFormat(OutputFormat.CSV);
         big.setOutputFormat(OutputFormat.JSON);
+        Assertions.assertEquals(expected, big.toString());
+
+        expected = loadFileContent("PrettyTable_nested_mixed.yaml");
+        letters.setOutputFormat(OutputFormat.HTML);
+        numbers.setOutputFormat(OutputFormat.CSV);
+        big.setOutputFormat(OutputFormat.YAML);
         Assertions.assertEquals(expected, big.toString());
 
         expected = loadFileContent("PrettyTable_nested_mixed.txt");
@@ -508,10 +544,11 @@ public class PrettyTableTest {
         Assertions.assertEquals(lineless, table.formattedString(OutputFormat.TEXT, true));
         table.setShowLines(true);
 
-        // csv, html, and json ignore the setting
+        // csv, html, json, and yaml ignore the setting
         Assertions.assertEquals(loadFileContent("PrettyTable_basic.csv"), table.formattedString(OutputFormat.CSV));
         Assertions.assertEquals(loadFileContent("PrettyTable_basic.html"), table.formattedString(OutputFormat.HTML));
         Assertions.assertEquals(loadFileContent("PrettyTable_basic.json"), table.formattedString(OutputFormat.JSON));
+        Assertions.assertEquals(loadFileContent("PrettyTable_basic.yaml"), table.formattedString(OutputFormat.YAML));
         table.setOutputFormat(OutputFormat.HTML);
         Assertions.assertEquals(loadFileContent("PrettyTable_basic.html"), table.toString());
 
@@ -565,14 +602,17 @@ public class PrettyTableTest {
         Assertions.assertEquals(fullRich, table.formattedString(OutputFormat.RICH, false));
         Assertions.assertEquals(fullHtml, table.toHtml(false));
 
-        // CSV and JSON keep every value either way
+        // CSV, JSON, and YAML keep every value either way
         String csv = loadFileContent("PrettyTable_duplicate.csv");
         String json = loadFileContent("PrettyTable_duplicate.json");
+        String yaml = loadFileContent("PrettyTable_duplicate.yaml");
         Assertions.assertEquals(csv, table.formattedString(OutputFormat.CSV));
         Assertions.assertEquals(json, table.formattedString(OutputFormat.JSON));
+        Assertions.assertEquals(yaml, table.formattedString(OutputFormat.YAML));
         table.setRemoveRedundant(false);
         Assertions.assertEquals(csv, table.formattedString(OutputFormat.CSV));
         Assertions.assertEquals(json, table.formattedString(OutputFormat.JSON));
+        Assertions.assertEquals(yaml, table.formattedString(OutputFormat.YAML));
     }
 
     @Test

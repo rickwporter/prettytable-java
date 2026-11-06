@@ -206,6 +206,10 @@ public final class PrettyTable {
         return formattedString(OutputFormat.JSON, false);
     }
 
+    String toYaml() {
+        return formattedString(OutputFormat.YAML, false);
+    }
+
     public String formattedString(OutputFormat format) {
         return this.formattedString(format, this.omitRedundant);
     }
@@ -220,6 +224,8 @@ public final class PrettyTable {
             renderer = new CsvTableRender();
         } else if (format == OutputFormat.JSON) {
             renderer = new JsonTableRender();
+        } else if (format == OutputFormat.YAML) {
+            renderer = new YamlTableRender();
         } else if (format == OutputFormat.HTML) {
             renderer = new HtmlTableRender();
         } else {

@@ -239,6 +239,10 @@ public class TableBuilderTest {
         expected = this.loadFileContent("TableBuilder_inner.json");
         Assertions.assertEquals(expected, actual);
 
+        actual = builder.build(OutputFormat.YAML, this.innerList()).toString();
+        expected = this.loadFileContent("TableBuilder_inner.yaml");
+        Assertions.assertEquals(expected, actual);
+
         actual = builder.build(OutputFormat.HTML, this.innerList()).toString();
         expected = this.loadFileContent("TableBuilder_inner.html");
         Assertions.assertEquals(expected, actual);

@@ -11,6 +11,7 @@ The data can be output in several different different forms:
 * **csv** - comma separated values format
 * **html** - HyperText Markup Language (HTML) format
 * **json** - JavaScript Object Notation (JSON) format
+* **yaml** - Yet Another Markup Language (YAML) format
 
 Here's an example of the standard **text** output:
 ```
@@ -128,6 +129,22 @@ Using the **json** format (e.g. `OutputFormat.JSON`), you get the following outp
 ]
 ```
 
+Using the **yaml** format (e.g. `OutputFormat.YAML`), you get the following output:
+```
+- - "Column A"
+  - "Column 2"
+  - "Column III"
+- Column A: "A"
+  Column 2: "B"
+  Column III: "c"
+- Column A: 1
+  Column 2: 1024
+  Column III: 65535
+- Column A: "Washington"
+  Column 2: "Adams"
+  Column III: "Jefferson"
+```
+
 ### Alignment
 ASCII **text**, **rich**, and **html** support different alignments. Here's how you would update the above table:
 ```Java
@@ -157,7 +174,7 @@ The **html** output will have the appropriate `style="text-align:xxx"` attribute
 ```
 
 ### Text options
-ASCII **text** and **rich** output can hide the header row, drop the border, draw a rule under data rows, and print a caption under the table. **csv**, **html**, and **json** ignore these settings. A `null` or empty caption is skipped. Any other caption is printed unchanged.
+ASCII **text** and **rich** output can hide the header row, drop the border, draw a rule under data rows, and print a caption under the table. **csv**, **html**, **json**, and **yaml** ignore these settings. A `null` or empty caption is skipped. Any other caption is printed unchanged.
 
 `PrettyTable::setShowHeader(false)` omits the header. Column widths then come only from the data cells, so the columns can get narrower. A table built with no headers already skips that row.
 
@@ -288,7 +305,7 @@ ASCII **text**, **rich**, and **html** remove redundancy by default. This de-dup
 |      |      |  F   |  E   |
 +------+------+------+------+
  ```
-By default, the code recognizes the redundant fields and removes them from the rendering of the data. `PrettyTable::setRemoveRedundant(false)` keeps every repeated value for `toString()` and for `formattedString(OutputFormat)`. One call can still override that setting with `formattedString(OutputFormat, boolean)`. **csv** and **json** keep every cell either way.
+By default, the code recognizes the redundant fields and removes them from the rendering of the data. `PrettyTable::setRemoveRedundant(false)` keeps every repeated value for `toString()` and for `formattedString(OutputFormat)`. One call can still override that setting with `formattedString(OutputFormat, boolean)`. **csv**, **json**, and **yaml** keep every cell either way.
 
 In this case, either of these calls:
 ```Java
