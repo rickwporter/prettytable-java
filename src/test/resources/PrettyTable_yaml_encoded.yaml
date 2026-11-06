@@ -1,0 +1,10 @@
+- - "note"
+  - "value"
+- note: "a: b"
+  value: "say \"hi\""
+- note: |-
+    line1
+    line2
+  value: "plain"
+- note: "crlf\r\nhere"
+  value: "tab\there"

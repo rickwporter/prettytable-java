@@ -1,0 +1,36 @@
+- - "Table name"
+  - "Data"
+- Table name: "Letters"
+  Data: |
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:right">A</th>
+                <th style="text-align:left">B</th>
+                <th style="text-align:center">C</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align:right">abc</td>
+                <td style="text-align:left">def</td>
+                <td style="text-align:center">ghij</td>
+            </tr>
+            <tr>
+                <td style="text-align:right">klmn</td>
+                <td style="text-align:left">o</td>
+                <td style="text-align:center">pqr</td>
+            </tr>
+            <tr>
+                <td style="text-align:right">st</td>
+                <td style="text-align:left">uvx</td>
+                <td style="text-align:center">yz</td>
+            </tr>
+        </tbody>
+    </table>
+- Table name: "Numbers"
+  Data: |
+    First,Second,Third
+    123,4567,89012
+    3456,78,901
+    23456,7890,12
