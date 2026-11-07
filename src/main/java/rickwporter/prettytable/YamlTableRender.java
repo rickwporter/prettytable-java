@@ -1,16 +1,24 @@
 package rickwporter.prettytable;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 class YamlTableRender implements TableRenderInterface {
-    private static final YAMLMapper MAPPER = yamlMapper();
+    private YAMLMapper yamlMapper;
+
+    YamlTableRender() {
+        this(null);
+    }
+
+    YamlTableRender(YAMLMapper mapper) {
+        this.yamlMapper = (mapper == null ? yamlMapper() : mapper);
+    }
 
     private static YAMLMapper yamlMapper() {
         YAMLMapper mapper = new YAMLMapper();
@@ -66,8 +74,8 @@ class YamlTableRender implements TableRenderInterface {
     @Override
     public String render(PrettyTable table, boolean removeRedundant) {
         try {
-            return MAPPER.writeValueAsString(this.toData(table));
-        } catch (IOException ex) {
+            return this.yamlMapper.writeValueAsString(this.toData(table));
+        } catch (JsonProcessingException ex) {
             throw new IllegalStateException("Unable to render table as YAML", ex);
         }
     }
