@@ -8,13 +8,23 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
 class CsvTableRender implements TableRenderInterface {
+    private final Appendable output;
+
+    CsvTableRender() {
+        this(null);
+    }
+
+    CsvTableRender(Appendable destination) {
+        this.output = destination;
+    }
 
     @Override
     public String render(PrettyTable table, boolean removedRedundant) {
+        StringBuilder result = new StringBuilder();
         try {
-            StringBuilder result = new StringBuilder();
+            Appendable target = this.output == null ? result : this.output;
             CSVFormat format = CSVFormat.DEFAULT.builder().setRecordSeparator("\n").get();
-            CSVPrinter printer = new CSVPrinter(result, format);
+            CSVPrinter printer = new CSVPrinter(target, format);
             if (!table.getHeaders().isEmpty()) {
                 printer.printRecord(table.getHeaders());
             }
@@ -25,8 +35,7 @@ class CsvTableRender implements TableRenderInterface {
             printer.close();
             return result.toString();
         } catch (IOException ex) {
-            // nothing to do here
+            throw new IllegalStateException("Unable to render table as CSV", ex);
         }
-        return null;
     }
 }
