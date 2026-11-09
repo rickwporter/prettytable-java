@@ -66,6 +66,13 @@
       <version>${version.apache.lang3}</version>
     </dependency>
 
+    <!-- General things -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${version.jackson}</version>
+    </dependency>
+
     <!-- CSV writing -->
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -75,13 +82,15 @@
 
     <!-- YAML writing -->
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${version.jackson}</version>
-    </dependency>
-    <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>${version.jackson}</version>
+    </dependency>
+
+    <!-- JSON writing -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
       <version>${version.jackson}</version>
     </dependency>
 
