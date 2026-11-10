@@ -8,14 +8,30 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
+/**
+ * Renders a value as a string.
+ * {@code null} becomes an empty string. A string, number, or boolean is rendered with
+ * {@link String#valueOf(Object)}. JSON and YAML write the value with Jackson. Every other format
+ * builds a {@link PrettyTable} from a {@link java.util.Map} or {@link java.util.List}.
+ */
 public final class PrettyObject {
     private static final String INDENT = "    ";
     private BuilderConfig config;
 
+    /**
+     * Creates a renderer that uses {@link BuilderConfig} defaults.
+     */
     public PrettyObject() {
         this(null);
     }
 
+    /**
+     * Creates a renderer that uses {@code options} for table output.
+     * JSON and YAML ignore the config and write the value as given. A {@code null} config uses
+     * {@link BuilderConfig} defaults.
+     *
+     * @param options labels, limits, and format settings, or {@code null}
+     */
     public PrettyObject(BuilderConfig options) {
         this.config = options == null ? new BuilderConfig() : options;
     }
@@ -55,6 +71,15 @@ public final class PrettyObject {
         }
     }
 
+    /**
+     * Renders {@code object} in {@code format}.
+     *
+     * @param format output format
+     * @param object value to render, or {@code null}
+     * @return the rendered text, or an empty string when {@code object} is {@code null}
+     * @throws IllegalArgumentException if a table format is given a value that is not a map or list
+     * @throws IllegalStateException if JSON or YAML writing fails
+     */
     public String render(OutputFormat format, Object object) {
         if (object == null) {
             return "";

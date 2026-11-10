@@ -8,20 +8,52 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Builds a {@link PrettyTable} from a {@link Map} or a {@link List}.
+ *
+ * <p>A map becomes a property/value table. Nested maps become nested tables, and a list of plain
+ * values is joined into one cell. A list of strings, numbers, or booleans becomes one column with
+ * an item-count caption. A list of maps uses the first matching
+ * {@linkplain BuilderConfig#getKeyFields() key field} as the row name, with that field's header
+ * capitalized. One other field becomes the second column. Further fields are nested under the
+ * properties label. {@link BuilderConfig#getColumns()} selects columns for a list of maps, and a
+ * {@code *} column gathers every field that was not named.
+ *
+ * <p>Keys, values, and URLs are cut off with the config's ellipsis. Built tables are left-aligned
+ * and do not clear repeated cells.
+ */
 public final class TableBuilder {
     private static final String WILDCARD_COLUMN = "*";
     private static final Object MANY_KEYS = new Object();
 
     private final BuilderConfig config;
 
+    /**
+     * Creates a builder that uses {@link BuilderConfig} defaults.
+     */
     public TableBuilder() {
         this(null);
     }
 
+    /**
+     * Creates a builder that uses {@code options}.
+     * A {@code null} config uses {@link BuilderConfig} defaults.
+     *
+     * @param options labels, limits, columns, and format, or {@code null}
+     */
     public TableBuilder(BuilderConfig options) {
         this.config = options == null ? new BuilderConfig() : options;
     }
 
+    /**
+     * Builds a table from {@code data} and sets its output format to {@code format}.
+     * The config's format is restored before this method returns.
+     *
+     * @param format format stored on the table
+     * @param data a map, a list, or an empty value
+     * @return the table, or {@code null} when {@code data} is {@code null} or empty
+     * @throws IllegalArgumentException if {@code data} cannot be turned into a table
+     */
     public PrettyTable build(OutputFormat format, Object data) {
         OutputFormat original = this.config.getFormat();
         this.config.setFormat(format);
@@ -32,6 +64,13 @@ public final class TableBuilder {
         return result;
     }
 
+    /**
+     * Builds a table from {@code data} using {@link BuilderConfig#getFormat()}.
+     *
+     * @param data a map, a list, or an empty value
+     * @return the table, or {@code null} when {@code data} is {@code null} or empty
+     * @throws IllegalArgumentException if {@code data} cannot be turned into a table
+     */
     public PrettyTable build(Object data) {
         if (isNothing(data)) {
             return null;
