@@ -4,7 +4,7 @@
   <groupId>io.github.rickwporter</groupId>
   <artifactId>prettytable</artifactId>
   <packaging>jar</packaging>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <name>rickwporter-prettytable</name>
     <description>Displays List and Map object data in a variety of forms (e.g. text [ascii], rich [utf-8], csv, html, json, yaml)</description>
   <url>https://github.com/rickwporter/prettytable-java</url>
