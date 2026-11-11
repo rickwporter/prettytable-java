@@ -14,14 +14,14 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
  * {@link String#valueOf(Object)}. JSON and YAML write the value with Jackson. Every other format
  * builds a {@link PrettyTable} from a {@link java.util.Map} or {@link java.util.List}.
  */
-public final class PrettyObject {
+public final class DisplayBuilder {
     private static final String INDENT = "    ";
     private BuilderConfig config;
 
     /**
      * Creates a renderer that uses {@link BuilderConfig} defaults.
      */
-    public PrettyObject() {
+    public DisplayBuilder() {
         this(null);
     }
 
@@ -32,7 +32,7 @@ public final class PrettyObject {
      *
      * @param options labels, limits, and format settings, or {@code null}
      */
-    public PrettyObject(BuilderConfig options) {
+    public DisplayBuilder(BuilderConfig options) {
         this.config = options == null ? new BuilderConfig() : options;
     }
 

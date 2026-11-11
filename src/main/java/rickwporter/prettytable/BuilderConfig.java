@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Labels, truncation limits, and column selection for {@link TableBuilder} and {@link PrettyObject}.
+ * Labels, truncation limits, and column selection for {@link TableBuilder} and {@link DisplayBuilder}.
  * Each setter returns this config so calls can be chained. String setters reject {@code null}.
  * List setters store a copy of the given list.
  */
