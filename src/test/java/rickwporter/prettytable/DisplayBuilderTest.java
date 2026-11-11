@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
-public class PrettyObjectTest {
+public class DisplayBuilderTest {
     private String loadFileContent(String filename) {
         URL resource = getClass().getClassLoader().getResource(filename);
         if (resource == null) {
@@ -64,10 +64,10 @@ public class PrettyObjectTest {
         extensions.put(OutputFormat.JSON, "json");
         extensions.put(OutputFormat.YAML, "yaml");
 
-        PrettyObject pretty = new PrettyObject();
+        DisplayBuilder pretty = new DisplayBuilder();
         Map<Object, Object> data = this.simpleDict();
         for (Map.Entry<OutputFormat, String> entry : extensions.entrySet()) {
-            String filename = "PrettyObject_simple_dict." + entry.getValue();
+            String filename = "DisplayBuilder_simple_dict." + entry.getValue();
             Assertions.assertEquals(
                     this.loadFileContent(filename),
                     pretty.render(entry.getKey(), data),
@@ -77,7 +77,7 @@ public class PrettyObjectTest {
 
     @Test 
     public void testNullValue() {
-        PrettyObject uut = new PrettyObject();
+        DisplayBuilder uut = new DisplayBuilder();
 
         for (OutputFormat format : OutputFormat.values()) {
             Assertions.assertEquals("", uut.render(format, null));
@@ -86,7 +86,7 @@ public class PrettyObjectTest {
 
     @Test 
     public void testSimpleValues() {
-        PrettyObject uut = new PrettyObject();
+        DisplayBuilder uut = new DisplayBuilder();
 
         for (OutputFormat format : OutputFormat.values()) {
             Assertions.assertEquals("1", uut.render(format, 1));
@@ -100,8 +100,8 @@ public class PrettyObjectTest {
         Map<Object, Object> data = this.simpleDict();
 
         String label = "My label";
-        PrettyObject config = new PrettyObject(new BuilderConfig().setPropertyLabel(label));
-        PrettyObject unconfig = new PrettyObject();
+        DisplayBuilder config = new DisplayBuilder(new BuilderConfig().setPropertyLabel(label));
+        DisplayBuilder unconfig = new DisplayBuilder();
 
         String labeled = config.render(OutputFormat.RICH, data);
         String unlabeled = unconfig.render(OutputFormat.RICH, data);
@@ -117,7 +117,7 @@ public class PrettyObjectTest {
         ObjectMapper mapper = mock(ObjectMapper.class);
         when(mapper.writeValueAsString(any())).thenThrow(failure);
 
-        PrettyObject uut = new PrettyObject();
+        DisplayBuilder uut = new DisplayBuilder();
         IllegalStateException ex = Assertions.assertThrows(
             IllegalStateException.class,
             () -> uut.renderJson(this.simpleDict(), mapper)
@@ -132,7 +132,7 @@ public class PrettyObjectTest {
         YAMLMapper mapper = mock(YAMLMapper.class);
         when(mapper.writeValueAsString(any())).thenThrow(failure);
 
-        PrettyObject uut = new PrettyObject();
+        DisplayBuilder uut = new DisplayBuilder();
         IllegalStateException ex = Assertions.assertThrows(
             IllegalStateException.class,
             () -> uut.renderYaml(this.simpleDict(), mapper)

@@ -20,7 +20,7 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 import picocli.CommandLine.ScopeType;
 import picocli.CommandLine.Spec;
-import rickwporter.prettytable.PrettyObject;
+import rickwporter.prettytable.DisplayBuilder;
 import rickwporter.prettytable.OutputFormat;
 
 @Command(
@@ -137,7 +137,7 @@ public final class PetsCli implements Callable<Integer> {
         }
 
         private String render(Object body) {
-            PrettyObject pretty = new PrettyObject();
+            DisplayBuilder pretty = new DisplayBuilder();
             return pretty.render(this.parent.format, body);
         }
 

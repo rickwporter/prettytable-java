@@ -24,7 +24,7 @@ Here's an example of the standard **text** output:
 +------------+----------+------------+
 ```
 
-The `PrettyTable` class handles a table as shown above. The `TableBuilder` class can be used to turn a `Map` or `List` object into a `PrettyTable`. `PrettyObject` also renders similar data types directly to a string with special handling for **json** and **yaml**.
+The `PrettyTable` class handles a table as shown above. The `TableBuilder` class can be used to turn a `Map` or `List` object into a `PrettyTable`. `DisplayBuilder` also renders similar data types directly to a string with special handling for **json** and **yaml**.
 
 ## PrettyTable Usage
 Here are the basics for how to create a `PrettyTable` as shown above:
@@ -411,13 +411,13 @@ import rickwporter.prettytable.BuilderConfig;
 | `setUrlPrefixes` | `http://`, `https://`, `ftp://` |
 | `setColumns` | `null` |
 
-## PrettyObject Usage
-`PrettyObject` renders a `Map` or a `List` to a string. The constructor takes an optional `BuilderConfig`. The output format and the data are passed to  `render`.
+## DisplayBuilder Usage
+`DisplayBuilder` renders a `Map` or a `List` to a string. The constructor takes an optional `BuilderConfig`. The output format and the data are passed to  `render`.
 
-The `PrettyObject` adds some special handling for other data types, and **json** and **yaml** output formats. The **json** and **yaml** output formats render the object directly, while the other types build/render the data into a `PrettyTable` using the `TableBuilder` with provided configuration.
+The `DisplayBuilder` adds some special handling for other data types, and **json** and **yaml** output formats. The **json** and **yaml** output formats render the object directly, while the other types build/render the data into a `PrettyTable` using the `TableBuilder` with provided configuration.
 
 ```Java
-import rickwporter.prettytable.PrettyObject;
+import rickwporter.prettytable.DisplayBuilder;
 import rickwporter.prettytable.OutputFormat;
 
       Map<String, Object> item = new LinkedHashMap<String, Object>();
@@ -426,7 +426,7 @@ import rickwporter.prettytable.OutputFormat;
       item.put("jkl", Arrays.asList("mno", "pqr", "stu"));
       item.put("yxa", null);
 
-      PrettyObject pretty = new PrettyObject();
+      DisplayBuilder pretty = new DisplayBuilder();
       System.out.println(pretty.render(OutputFormat.TEXT, item));
 ```
 
@@ -461,7 +461,7 @@ A `BuilderConfig` changes the table formats. **json** and **yaml** keep the obje
 import rickwporter.prettytable.BuilderConfig;
 
       BuilderConfig config = new BuilderConfig().setPropertyLabel("Field");
-      System.out.println(new PrettyObject(config).render(OutputFormat.RICH, item));
+      System.out.println(new DisplayBuilder(config).render(OutputFormat.RICH, item));
 ```
 
 ## Example

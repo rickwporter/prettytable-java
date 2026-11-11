@@ -1,7 +1,7 @@
 package rickwporter.prettytable;
 
 /**
- * Output produced by {@link PrettyTable} and {@link PrettyObject}.
+ * Output produced by {@link PrettyTable} and {@link DisplayBuilder}.
  */
 public enum OutputFormat {
     /** ASCII rules and vertical bars. */
