@@ -466,7 +466,7 @@ import rickwporter.prettytable.BuilderConfig;
 
 ## Example
 
-[`examples/pets-cli`](examples/pets-cli) is a [picocli](https://picocli.info/) client for the modified [OpenAPI Petstore](examples/pets.yaml). It prints JSON responses with `TableBuilder`. See the example README for how to build and run it.
+[`examples/pets-cli`](examples/pets-cli) is a [picocli](https://picocli.info/) client for the modified [OpenAPI Petstore](examples/pets.yaml). It prints JSON responses with `DisplayBuilder`. See the example README for how to build and run it.
 
 ## Development
 
