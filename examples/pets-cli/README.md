@@ -1,6 +1,6 @@
 # pets
 
-A [picocli](https://picocli.info/) command line client for the Swagger Petstore in [`pet.yaml`](pet.yaml). Responses are printed with `TableBuilder`.
+A [picocli](https://picocli.info/) command line client for the Swagger Petstore in [`pet.yaml`](pet.yaml). Responses are printed with `DisplayBuilder`.
 
 The default server is `http://petstore.swagger.io/v1`. A flag on the command line wins over the environment variable.
 
